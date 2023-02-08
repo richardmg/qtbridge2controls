@@ -15,6 +15,7 @@ qt_add_resources(application "resources"
     PREFIX "/"
     FILES
         main.qml
+        figma/style.qtbridge
 )
 
 target_link_libraries(application
