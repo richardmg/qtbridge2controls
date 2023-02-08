@@ -5,7 +5,7 @@ project(application VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 6.5 REQUIRED Quick QuickControls2)
+find_package(Qt6 6.5 REQUIRED Gui Quick QuickControls2)
 
 qt_add_executable(application
     main.cpp
