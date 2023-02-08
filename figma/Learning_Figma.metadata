@@ -1,0 +1,268 @@
+{
+ "pluginInfo": {
+  "applicationId": "Generic",
+  "applicationVersion": "70",
+  "extensionVersion": "3.9.1",
+  "metadataVersion": "1.1",
+  "assetNameScheme": "uuid"
+ },
+ "documentInfo": {
+  "name": "Learning_Figma",
+  "metadata": {
+   "jsonExportPath": "/",
+   "scaleFormat": [
+    {
+     "formats": "png",
+     "scales": "1",
+     "use-id-for-name": true,
+     "overwriting": true
+    }
+   ],
+   "formatOptions": {
+    "png": {
+     "save-for-web": false
+    },
+    "jpg": {
+     "progressive": false,
+     "compression": 1
+    },
+    "svg": {
+     "include-namespaces": false,
+     "compact": true
+    }
+   }
+  }
+ },
+ "artboards": [
+  {
+   "x": -173,
+   "y": -121,
+   "name": "flattenframe",
+   "width": 781,
+   "height": 1267,
+   "metadata": {
+    "uuid": "18e3bf1a-625d-5cee-a98c-760b378bed23",
+    "qmlId": "flattenframe",
+    "exportType": "component",
+    "typeName": "Rectangle",
+    "qmlProperties": [
+     "color: \"#ffffff\""
+    ]
+   },
+   "layerIndex": 0,
+   "children": [
+    {
+     "x": 361,
+     "y": 1103,
+     "name": "MyButton",
+     "width": 103,
+     "height": 54,
+     "metadata": {
+      "uuid": "bf247009-2124-5fcd-8e7d-625d2c087e74",
+      "qmlId": "myButton",
+      "templateId": "attached",
+      "templateQml": "/****************************************************************************\n**\n** Copyright (C) 2022 The Qt Company Ltd\n** All rights reserved.\n** For any questions to The Qt Company, please use contact form at http://www.qt.io/contact-us\n**\n** This file is part of the Qt Asset Importer module.\n**\n** Commercial License Usage\n** Licensees holding valid commercial Qt licenses may use this file in\n** accordance with the commercial license agreement provided with the\n** Software or, alternatively, in accordance with the terms contained in\n** a written agreement between you and The Qt Company. For licensing terms\n** and conditions see http://www.qt.io/terms-conditions. For further\n** information use the contact form at http://www.qt.io/contact-us.\n**\n** If you have questions regarding the use of this file, please use\n** contact form at http://www.qt.io/contact-us\n**\n******************************************************************************/\n\nimport QtQuick.Templates 2.1 as T\n\nT.Button {\n    id: buttonControl\n\n    implicitWidth: templateBackground.width\n    implicitHeight: templateBackground.height\n\n    background:templateBackground\n    property alias buttonText: buttonTemplate.labelText\n\n    contentItem: Item {}\n\n        Item {\n        id: templateBackground\n        implicitWidth: buttonTemplate.width\n        implicitHeight: buttonTemplate.height\n        anchors.fill: parent\n\n            Item {\n                id: buttonTemplate\n                state: \"state_state_\" + buttonControl.state\n            }\n    }\n\n\n    states: [\n        State {\n            name: \"idle\"\n            when: buttonControl.enabled && !buttonControl.down && !buttonControl.hovered && !buttonControl.checked\n        },\n        State {\n            name: \"hovered\"\n            when: buttonControl.hovered && buttonControl.enabled && !buttonControl.checked && !buttonControl.down\n        },\n        State {\n            name: \"pressed\"\n            when: buttonControl.down && buttonControl.enabled && !buttonControl.checked\n        },\n        State {\n            name: \"checked\"\n            when: buttonControl.checked && buttonControl.enabled && !buttonControl.down && !buttonControl.hovered\n        },\n        State {\n            name: \"checkedHovered\"\n            when: buttonControl.hovered && buttonControl.checked && buttonControl.enabled && !buttonControl.down\n        },\n        State {\n            name: \"checkedPressed\"\n            when: buttonControl.checked && buttonControl.enabled && buttonControl.down\n        },\n        State {\n            name: \"blocked\"\n            when: !buttonControl.enabled\n        }\n    ]\n}\n",
+      "exportType": "component"
+     },
+     "layerIndex": 0
+    },
+    {
+     "x": 361,
+     "y": 833,
+     "name": "blocked",
+     "width": 103,
+     "height": 54,
+     "metadata": {
+      "uuid": "f77c5cf8-c064-50c2-b59c-0ac330f446fa",
+      "qmlId": "blocked",
+      "exportType": "child",
+      "assetData": {
+       "assetPath": "./f77c5cf8-c064-50c2-b59c-0ac330f446fa.svg",
+       "assetBounds": {
+        "x": 361,
+        "y": 833
+       }
+      }
+     },
+     "layerIndex": 1
+    },
+    {
+     "x": 361,
+     "y": 766,
+     "name": "checkedPressed",
+     "width": 103,
+     "height": 54,
+     "metadata": {
+      "uuid": "48fa1789-36d0-5835-a86b-fce3565545ed",
+      "qmlId": "checkedPressed",
+      "exportType": "child",
+      "assetData": {
+       "assetPath": "./48fa1789-36d0-5835-a86b-fce3565545ed.svg",
+       "assetBounds": {
+        "x": 361,
+        "y": 766
+       }
+      }
+     },
+     "layerIndex": 2
+    },
+    {
+     "x": 361,
+     "y": 699,
+     "name": "checkedHovered",
+     "width": 103,
+     "height": 54,
+     "metadata": {
+      "uuid": "c139a4b9-bb12-5a1b-a79b-690161cc8542",
+      "qmlId": "checkedHovered",
+      "exportType": "child",
+      "assetData": {
+       "assetPath": "./c139a4b9-bb12-5a1b-a79b-690161cc8542.svg",
+       "assetBounds": {
+        "x": 361,
+        "y": 699
+       }
+      }
+     },
+     "layerIndex": 3
+    },
+    {
+     "x": 361,
+     "y": 632,
+     "name": "checked",
+     "width": 103,
+     "height": 54,
+     "metadata": {
+      "uuid": "41efd42e-2d27-53cb-9051-02d8954a8d27",
+      "qmlId": "checked",
+      "exportType": "child",
+      "assetData": {
+       "assetPath": "./41efd42e-2d27-53cb-9051-02d8954a8d27.svg",
+       "assetBounds": {
+        "x": 361,
+        "y": 632
+       }
+      }
+     },
+     "layerIndex": 4
+    },
+    {
+     "x": 361,
+     "y": 565,
+     "name": "pressed",
+     "width": 103,
+     "height": 54,
+     "metadata": {
+      "uuid": "5bc4be4c-fd58-5d1d-bf17-cf61b15e62d2",
+      "qmlId": "pressed",
+      "exportType": "child",
+      "assetData": {
+       "assetPath": "./5bc4be4c-fd58-5d1d-bf17-cf61b15e62d2.svg",
+       "assetBounds": {
+        "x": 361,
+        "y": 565
+       }
+      }
+     },
+     "layerIndex": 5
+    },
+    {
+     "x": 361,
+     "y": 498,
+     "name": "hovered",
+     "width": 103,
+     "height": 54,
+     "metadata": {
+      "uuid": "9db37b91-1a35-5387-b3df-44bb94f6c0da",
+      "qmlId": "hovered",
+      "exportType": "child",
+      "assetData": {
+       "assetPath": "./9db37b91-1a35-5387-b3df-44bb94f6c0da.svg",
+       "assetBounds": {
+        "x": 361,
+        "y": 498
+       }
+      }
+     },
+     "layerIndex": 6
+    },
+    {
+     "x": 361,
+     "y": 431,
+     "name": "idle",
+     "width": 103,
+     "height": 54,
+     "metadata": {
+      "uuid": "50b81526-89dd-5f63-99e5-8dcafbf90d06",
+      "qmlId": "idle",
+      "exportType": "child",
+      "assetData": {
+       "assetPath": "./50b81526-89dd-5f63-99e5-8dcafbf90d06.svg",
+       "assetBounds": {
+        "x": 361,
+        "y": 431
+       }
+      }
+     },
+     "layerIndex": 7
+    }
+   ]
+  },
+  {
+   "x": 647,
+   "y": -121,
+   "name": "effectframe",
+   "width": 848,
+   "height": 1267,
+   "metadata": {
+    "uuid": "caf594f6-c30f-561d-8d58-6b07e9513389",
+    "qmlId": "effectframe",
+    "exportType": "component",
+    "typeName": "Rectangle",
+    "qmlProperties": [
+     "color: \"#ffffff\""
+    ]
+   },
+   "layerIndex": 1,
+   "children": [
+    {
+     "x": 380,
+     "y": 1104,
+     "name": "MyButton",
+     "width": 103,
+     "height": 54,
+     "metadata": {
+      "uuid": "9a225d69-b544-5e7d-a931-74323eaab6af",
+      "qmlId": "myButton",
+      "templateId": "attached",
+      "templateQml": "/****************************************************************************\n**\n** Copyright (C) 2022 The Qt Company Ltd\n** All rights reserved.\n** For any questions to The Qt Company, please use contact form at http://www.qt.io/contact-us\n**\n** This file is part of the Qt Asset Importer module.\n**\n** Commercial License Usage\n** Licensees holding valid commercial Qt licenses may use this file in\n** accordance with the commercial license agreement provided with the\n** Software or, alternatively, in accordance with the terms contained in\n** a written agreement between you and The Qt Company. For licensing terms\n** and conditions see http://www.qt.io/terms-conditions. For further\n** information use the contact form at http://www.qt.io/contact-us.\n**\n** If you have questions regarding the use of this file, please use\n** contact form at http://www.qt.io/contact-us\n**\n******************************************************************************/\n\nimport QtQuick.Templates 2.1 as T\n\nT.Button {\n    id: buttonControl\n\n    implicitWidth: templateBackground.width\n    implicitHeight: templateBackground.height\n\n    background:templateBackground\n    property alias buttonText: buttonTemplate.labelText\n\n    contentItem: Item {}\n\n        Item {\n        id: templateBackground\n        implicitWidth: buttonTemplate.width\n        implicitHeight: buttonTemplate.height\n        anchors.fill: parent\n\n            Item {\n                id: buttonTemplate\n                state: \"state_state_\" + buttonControl.state\n            }\n    }\n\n\n    states: [\n        State {\n            name: \"idle\"\n            when: buttonControl.enabled && !buttonControl.down && !buttonControl.hovered && !buttonControl.checked\n        },\n        State {\n            name: \"hovered\"\n            when: buttonControl.hovered && buttonControl.enabled && !buttonControl.checked && !buttonControl.down\n        },\n        State {\n            name: \"pressed\"\n            when: buttonControl.down && buttonControl.enabled && !buttonControl.checked\n        },\n        State {\n            name: \"checked\"\n            when: buttonControl.checked && buttonControl.enabled && !buttonControl.down && !buttonControl.hovered\n        },\n        State {\n            name: \"checkedHovered\"\n            when: buttonControl.hovered && buttonControl.checked && buttonControl.enabled && !buttonControl.down\n        },\n        State {\n            name: \"checkedPressed\"\n            when: buttonControl.checked && buttonControl.enabled && buttonControl.down\n        },\n        State {\n            name: \"blocked\"\n            when: !buttonControl.enabled\n        }\n    ]\n}\n",
+      "exportType": "component"
+     },
+     "layerIndex": 0
+    },
+    {
+     "x": 367,
+     "y": 414,
+     "name": "ButtonTemplate",
+     "width": 129,
+     "height": 491,
+     "metadata": {
+      "uuid": "45a01e2c-b707-5258-b78a-92f1112f4485",
+      "qmlId": "buttonTemplate",
+      "exportType": "component",
+      "assetData": {
+       "assetPath": "./45a01e2c-b707-5258-b78a-92f1112f4485.svg",
+       "assetBounds": {
+        "x": 367,
+        "y": 414
+       }
+      }
+     },
+     "layerIndex": 1
+    }
+   ]
+  }
+ ],
+ "artboardSets": [],
+ "dependencies": []
+}
