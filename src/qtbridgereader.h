@@ -12,6 +12,13 @@ public:
         m_destDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation)
         + "/" + qApp->applicationName();
 
+        const QString suffix = QFileInfo(bridgeFile).suffix();
+        if (suffix.compare(u"qtbridge"_qs) != 0)
+        {
+            m_errorMessage = QStringLiteral("The file is not a .qtbridge file: %1").arg(bridgeFile);
+            return;
+        }
+
         QZipReader zip(bridgeFile);
         if (!zip.isReadable())
         {
