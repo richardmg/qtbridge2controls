@@ -31,9 +31,15 @@ public:
             return;
         }
     
-        const QString metaDataFileName = m_destDir + "/" + u"Learning_Figma.metadata"_qs;
-        QFile metaDataFile(metaDataFileName);
+        const auto fileList = QDir(m_destDir).entryList(QStringList("*.metadata"));
+        if (fileList.isEmpty()) {
+            m_errorMessage = QStringLiteral("Could not find a .metadata file inside the .qtbridge file: %1")
+                .arg(entryList().join(u"; "_qs));
+            return;
+        }
 
+        const QString metaDataFileName = m_destDir + "/" + fileList.first();
+        QFile metaDataFile(metaDataFileName);
         if (!metaDataFile.exists())
         {
             m_errorMessage = QStringLiteral("File doesn't exists: %1").arg(metaDataFileName);
@@ -71,6 +77,11 @@ public:
     QString errorMessage() const
     {
         return m_errorMessage;
+    }
+
+    QStringList entryList()
+    {
+        return QDir(m_destDir).entryList();
     }
 
 private: 

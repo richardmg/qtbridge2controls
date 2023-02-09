@@ -15,7 +15,6 @@ qt_add_executable(application
 qt_add_resources(application "resources"
     PREFIX "/"
     FILES
-        main.qml
         figma/style.qtbridge
 )
 
@@ -24,12 +23,6 @@ target_link_libraries(application
         Qt6::Quick
         Qt6::QuickControls2
         Qt6::GuiPrivate
-)
-
-qt_add_qml_module(application
-    URI application
-    VERSION 1.0
-    QML_FILES main.qml 
 )
 
 set_target_properties(application PROPERTIES
