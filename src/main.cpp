@@ -21,7 +21,8 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    qDebug() << bridgeReader.metaData();
+    QJsonDocument json = bridgeReader.metaData();
+    qDebug() << json;
 
     // QQmlApplicationEngine engine(QUrl("qrc:///main.qml"));
     // return app.exec();

@@ -2,6 +2,7 @@
 #define QTBRIDGEREADER_H
 
 #include <QtCore>
+#include <QJsonDocument>
 #include <QtGui/private/qzipreader_p.h>
 
 class QtBridgeReader
@@ -12,8 +13,7 @@ public:
         m_destDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation)
         + "/" + qApp->applicationName();
 
-        const QString suffix = QFileInfo(bridgeFile).suffix();
-        if (suffix.compare(u"qtbridge"_qs) != 0)
+        if (QFileInfo(bridgeFile).suffix().compare(u"qtbridge"_qs) != 0)
         {
             m_errorMessage = QStringLiteral("The file is not a .qtbridge file: %1").arg(bridgeFile);
             return;
@@ -59,7 +59,12 @@ public:
             return;
         }
 
-        m_metaData = metaDataFile.readAll();
+        QJsonParseError error;
+        m_metaData = QJsonDocument::fromJson(metaDataFile.readAll(), &error);
+        if (m_metaData.isNull()) {
+            m_errorMessage = error.errorString();
+            return;
+        }
     }
 
     ~QtBridgeReader()
@@ -67,7 +72,8 @@ public:
         QDir(m_destDir).removeRecursively();
     }
 
-    QString metaData() const{
+    QJsonDocument metaData() const
+    {
         return m_metaData;
     }
 
@@ -93,7 +99,7 @@ public:
 
 private: 
     QString m_destDir;
-    QString m_metaData;
+    QJsonDocument m_metaData;
     QString m_errorMessage;
 };
 
