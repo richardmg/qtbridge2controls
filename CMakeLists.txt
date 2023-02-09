@@ -8,8 +8,8 @@ set(CMAKE_AUTORCC ON)
 find_package(Qt6 6.5 REQUIRED Gui Quick QuickControls2)
 
 qt_add_executable(application
-    main.cpp
-    qtbridgereader.h
+    src/main.cpp
+    src/qtbridgereader.h
 )
 
 qt_add_resources(application "resources"
