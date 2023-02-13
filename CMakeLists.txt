@@ -15,7 +15,7 @@ qt_add_executable(application
 qt_add_resources(application "resources"
     PREFIX "/"
     FILES
-        figma/style.qtbridge
+        data/testdata.qtbridge
 )
 
 target_link_libraries(application

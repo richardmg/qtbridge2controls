@@ -13,7 +13,7 @@ int main(int argc, char **argv){
     // }
 
     // const QString fileName(argv[1]);
-    const QString fileName(u":/figma/style.qtbridge"_qs);
+    const QString fileName(u":/data/testdata.qtbridge"_qs);
 
     QtBridgeReader bridgeReader(fileName);
     if (bridgeReader.hasError()) {
