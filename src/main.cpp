@@ -2,6 +2,8 @@
 #include <QtQml>
 #include <QtQuick>
 
+#include <stdexcept>
+
 #include "qtbridgereader.h"
 
 // Find the first object (depth-first) that has the given key, and return its value
@@ -62,8 +64,9 @@ QJsonObject findJsonObjectFromQmlId(const QString &qmlId, const QJsonValue &from
 
 struct JsonTools
 {
-    // Return the object with the given name in the array
-    static QJsonObject findObjectWithName(const QString &name, const QJsonArray &array)
+    // Returns the object with the given name in the array. The
+    // object needs to have a "name" key, as such.
+    static QJsonObject object(const QString &name, const QJsonArray &array)
     {
         for (auto it = array.constBegin(); it != array.constEnd(); ++it)
         {
@@ -80,17 +83,40 @@ struct JsonTools
                 return object;
         }
 
-        return {};
+        throw std::invalid_argument("could not find '" + name.toStdString() + "'");
     }
 
+    // Returns the object with the given name in the object. The
+    // object needs to have a "name" key, as such.
+    static QJsonObject object(const QString &name, const QJsonObject object)
+    {
+        const auto foundValue = object.value(name);
+        if (foundValue.isUndefined())
+            throw std::invalid_argument("could not find '" + name.toStdString() + "'");
+        if (!foundValue.isObject())
+            throw std::invalid_argument("'" + name.toStdString() + "' is not an object!");
+        return foundValue.toObject();
+    }
+
+    // Returns the array of the given key in the object
+    static QJsonArray array(const QString &name, const QJsonObject object)
+    {
+        const auto foundValue = object.value(name);
+        if (foundValue.isUndefined())
+            throw std::invalid_argument("could not find '" + name.toStdString() + "'");
+        if (!foundValue.isArray())
+            throw std::invalid_argument("'" + name.toStdString() + "' is not an array!");
+        return foundValue.toArray();
+    }
+
+    // Returns the value of the given key in the object. Same as
+    // object.value(), but throws an exception if not found.
     static QJsonValue value(const QString &name, const QJsonObject object)
     {
         const auto foundValue = object.value(name);
-        if (!foundValue.isNull())
-            return foundValue;
-
-        qWarning() << "Could not find '" << name << "'";
-        return {};
+        if (foundValue.isUndefined())
+            throw std::invalid_argument("could not find '" + name.toStdString() + "'");
+        return foundValue;
     }
 };
 
@@ -114,34 +140,25 @@ int main(int argc, char **argv){
     QJsonDocument json = bridgeReader.metaData();
     Q_ASSERT(!json.isArray());
 
-    // TODO: When using real-life data, 'artboardSets' will probably not
-    // be on the root node, so this will need to be adjusted!
-    const auto artboardSets = JsonTools::value("artboardSets", json.object());
-    if (artboardSets.isNull())
-        return -1;
-    const auto buttonTemplate = JsonTools::findObjectWithName("ButtonTemplate", artboardSets.toArray());
-    if (buttonTemplate.isEmpty()) {
-        qWarning() << "Could not find 'ButtonTemplate'!";
+    try {
+        // TODO: When using real-life data, 'artboardSets' will probably not
+        // be on the root node, so this will need to be adjusted!
+        const auto artboardSets = JsonTools::array("artboardSets", json.object());
+        const auto buttonTemplate = JsonTools::object("ButtonTemplate", artboardSets);
+        const auto artboards = JsonTools::array("artboards", buttonTemplate);
+        const auto state_idle = JsonTools::object("state=idle", artboards);
+        const auto children = JsonTools::array("children", state_idle);
+        const auto background = JsonTools::object("background", children);
+        const auto metadata = JsonTools::object("metadata", background);
+        const auto assetData = JsonTools::object("assetData", metadata);
+        const auto assetPath = JsonTools::value("assetPath", assetData);
+
+        qDebug() << "background image:" << assetPath.toString();
+
+    } catch (std::exception &e) {
+        qWarning() << "Failed to parse qtbridge:" << e.what();
         return -1;
     }
-    const auto artboards = buttonTemplate.value("artboards");
-    if (artboards.isNull()) {
-        qWarning() << "Could not find 'artboards' inside buttonTemplate!";
-        return -1;
-    }
-    const auto state_idle = JsonTools::findObjectWithName("state=idle", artboards.toArray());
-    if (state_idle.isEmpty()) {
-        qWarning() << "Could not find 'state_idle' inside buttonTemplate!";
-        return -1;
-    }
-
-    qDebug() << state_idle; 
-
-
-    // qDebug() << "state_idle:" << state_idle[u"name"_qs];
-
-// TODO: først finn ArtBoardSets. Og dette er ikke qmlId !
-    // TODO: implement try/catch
 
     // QQmlApplicationEngine engine(QUrl("qrc:///main.qml"));
     // return app.exec();
