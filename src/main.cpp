@@ -27,15 +27,16 @@ int main(int argc, char **argv){
     try {
         // TODO: When using real-life data, 'artboardSets' will probably not
         // be on the root node, so this will need to be adjusted!
-        const auto artboardSets = JsonTools::array("artboardSets", json.object());
-        const auto buttonTemplate = JsonTools::object("ButtonTemplate", artboardSets);
-        const auto artboards = JsonTools::array("artboards", buttonTemplate);
-        const auto state_idle = JsonTools::object("state=idle", artboards);
-        const auto children = JsonTools::array("children", state_idle);
-        const auto background = JsonTools::object("background", children);
-        const auto metadata = JsonTools::object("metadata", background);
-        const auto assetData = JsonTools::object("assetData", metadata);
-        const auto assetPath = JsonTools::value("assetPath", assetData);
+        using namespace JsonTools;
+        const auto artboardSets = array("artboardSets", json.object());
+        const auto buttonTemplate = object("ButtonTemplate", artboardSets);
+        const auto artboards = array("artboards", buttonTemplate);
+        const auto state_idle = object("state=idle", artboards);
+        const auto children = array("children", state_idle);
+        const auto background = object("background", children);
+        const auto metadata = object("metadata", background);
+        const auto assetData = object("assetData", metadata);
+        const auto assetPath = value("assetPath", assetData);
 
         qDebug() << "background image:" << assetPath.toString();
 
