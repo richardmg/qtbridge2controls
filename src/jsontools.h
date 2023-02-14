@@ -3,62 +3,6 @@
 
 namespace JsonTools {
 
-// Find the first object (depth-first) that has the given key, and return its value
-QJsonValue findJsonValue(const QString &key, const QJsonValue &fromValue)
-{
-    if (fromValue.isArray()) {
-        const auto array = fromValue.toArray();
-        for (auto it = array.constBegin(); it != array.constEnd(); ++it) {
-            const auto value = *it;
-            const auto resultValue = findJsonValue(key, value);
-            if (!resultValue.isNull())
-                return resultValue;
-        }
-    } else if (fromValue.isObject()) {
-        const auto objectValue = fromValue.toObject();
-        for (auto it = objectValue.constBegin(); it != objectValue.constEnd(); ++it) {
-            const auto value = *it;
-            if (it.key() == key)
-                return objectValue;
-            if (value.isObject() || value.isArray()) {
-                const auto resultObject = findJsonValue(key, value);
-                if (!resultObject.isNull())
-                    return resultObject;
-            }
-        }
-    }
-
-    return QJsonObject();
-}
-
-// Find the first object with the given qmlId
-QJsonObject findJsonObjectFromQmlId(const QString &qmlId, const QJsonValue &fromValue)
-{
-    if (fromValue.isArray()) {
-        const auto array = fromValue.toArray();
-        for (auto it = array.constBegin(); it != array.constEnd(); ++it) {
-            const auto value = *it;
-            const auto resultValue = findJsonObjectFromQmlId(qmlId, value);
-            if (!resultValue.isEmpty())
-                return resultValue;
-        }
-    } else if (fromValue.isObject()) {
-        const auto objectValue = fromValue.toObject();
-        for (auto it = objectValue.constBegin(); it != objectValue.constEnd(); ++it) {
-            const auto value = *it;
-            if (it.key() == u"qmlId"_qs && value.isString() && value.toString() == qmlId)
-                return objectValue;
-            if (value.isObject() || value.isArray()) {
-                const auto resultObject = findJsonObjectFromQmlId(qmlId, value);
-                if (!resultObject.isEmpty())
-                    return resultObject;
-            }
-        }
-    }
-
-    return QJsonObject();
-}
-
 QJsonObject lastObject;
 QJsonArray lastArray;
 QJsonValue lastValue;
