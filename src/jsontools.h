@@ -59,9 +59,13 @@ QJsonObject findJsonObjectFromQmlId(const QString &qmlId, const QJsonValue &from
     return QJsonObject();
 }
 
+QJsonObject lastObject;
+QJsonArray lastArray;
+QJsonValue lastValue;
+
 // Returns the object with the given name in the array. The
 // object needs to have a "name" key, as such.
-static QJsonObject object(const QString &name, const QJsonArray &array)
+static QJsonObject objectInArray(const QString &name, const QJsonArray &array = lastArray)
 {
     for (auto it = array.constBegin(); it != array.constEnd(); ++it)
     {
@@ -74,8 +78,10 @@ static QJsonObject object(const QString &name, const QJsonArray &array)
         if (nameValue.isNull())
             continue;
         const QString foundName = nameValue.toString();
-        if (foundName == name)
-            return object;
+        if (foundName == name) {
+            lastObject = object;
+            return lastObject;
+        }
     }
 
     throw std::invalid_argument("could not find '" + name.toStdString() + "'");
@@ -83,35 +89,38 @@ static QJsonObject object(const QString &name, const QJsonArray &array)
 
 // Returns the object with the given name in the object. The
 // object needs to have a "name" key, as such.
-static QJsonObject object(const QString &name, const QJsonObject object)
+static QJsonObject objectInObject(const QString &name, const QJsonObject object = lastObject)
 {
     const auto foundValue = object.value(name);
     if (foundValue.isUndefined())
         throw std::invalid_argument("could not find '" + name.toStdString() + "'");
     if (!foundValue.isObject())
         throw std::invalid_argument("'" + name.toStdString() + "' is not an object!");
-    return foundValue.toObject();
+    lastObject = foundValue.toObject();
+    return lastObject;
 }
 
 // Returns the array of the given key in the object
-static QJsonArray array(const QString &name, const QJsonObject object)
+static QJsonArray arrayInObject(const QString &name, const QJsonObject object = lastObject)
 {
     const auto foundValue = object.value(name);
     if (foundValue.isUndefined())
         throw std::invalid_argument("could not find '" + name.toStdString() + "'");
     if (!foundValue.isArray())
         throw std::invalid_argument("'" + name.toStdString() + "' is not an array!");
-    return foundValue.toArray();
+    lastArray = foundValue.toArray();
+    return lastArray;
 }
 
 // Returns the value of the given key in the object. Same as
 // object.value(), but throws an exception if not found.
-static QJsonValue value(const QString &name, const QJsonObject object)
+static QJsonValue valueInObject(const QString &name, const QJsonObject object = lastObject)
 {
     const auto foundValue = object.value(name);
     if (foundValue.isUndefined())
         throw std::invalid_argument("could not find '" + name.toStdString() + "'");
-    return foundValue;
+    lastValue = foundValue;
+    return lastValue;
 }
 
 } // namespace
