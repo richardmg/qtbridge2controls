@@ -28,15 +28,16 @@ int main(int argc, char **argv){
         // TODO: When using real-life data, 'artboardSets' will probably not
         // be on the root node, so this will need to be adjusted!
         using namespace JsonTools;
-        arrayInObject("artboardSets", json.object());
-        objectInArray("ButtonTemplate");
-        arrayInObject("artboards");
-        objectInArray("state=idle");
-        arrayInObject("children");
-        objectInArray("background");
-        objectInObject("metadata");
-        objectInObject("assetData");
-        valueInObject("assetPath");
+
+        array("artboardSets", json.object());
+        object("ButtonTemplate");
+        array("artboards");
+        object("state=idle");
+        array("children");
+        object("background");
+        object("metadata");
+        object("assetData");
+        value("assetPath");
 
         qDebug() << "background image:" << lastValue.toString();
 

@@ -48,8 +48,18 @@ static QJsonObject objectInObject(const QString &name, const QJsonObject object 
     return lastObject;
 }
 
+static QJsonObject object(const QString &name)
+{
+    if (lastType == QJsonValue::Object)
+        return objectInObject(name);
+    else if (lastType == QJsonValue::Array)
+        return objectInArray(name);
+
+    throw std::invalid_argument("the last type was neither object nor array!");
+}
+
 // Returns the array of the given key in the object
-static QJsonArray arrayInObject(const QString &name, const QJsonObject object = lastObject)
+static QJsonArray array(const QString &name, const QJsonObject object = lastObject)
 {
     const auto foundValue = object.value(name);
     if (foundValue.isUndefined())
@@ -64,7 +74,7 @@ static QJsonArray arrayInObject(const QString &name, const QJsonObject object = 
 
 // Returns the value of the given key in the object. Same as
 // object.value(), but throws an exception if not found.
-static QJsonValue valueInObject(const QString &name, const QJsonObject object = lastObject)
+static QJsonValue value(const QString &name, const QJsonObject object = lastObject)
 {
     const auto foundValue = object.value(name);
     if (foundValue.isUndefined())
