@@ -30,11 +30,11 @@ int main(int argc, char **argv){
         using namespace JsonTools;
 
         array("artboardSets", json.object());
-        object("ButtonTemplate");
+        objectInArrayWithName("ButtonTemplate");
         array("artboards");
-        object("state=idle");
+        objectInArrayWithName("state=idle");
         array("children");
-        object("background");
+        objectInArrayWithName("background");
         object("metadata");
         object("assetData");
         value("assetPath");
