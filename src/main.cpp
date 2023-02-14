@@ -60,6 +60,40 @@ QJsonObject findJsonObjectFromQmlId(const QString &qmlId, const QJsonValue &from
     return QJsonObject();
 }
 
+struct JsonTools
+{
+    // Return the object with the given name in the array
+    static QJsonObject findObjectWithName(const QString &name, const QJsonArray &array)
+    {
+        for (auto it = array.constBegin(); it != array.constEnd(); ++it)
+        {
+            const auto value = *it;
+            if (!value.isObject())
+                continue;
+
+            const auto object = value.toObject();
+            const auto nameValue = object.value(u"name"_qs);
+            if (nameValue.isNull())
+                continue;
+            const QString foundName = nameValue.toString();
+            if (foundName == name)
+                return object;
+        }
+
+        return {};
+    }
+
+    static QJsonValue value(const QString &name, const QJsonObject object)
+    {
+        const auto foundValue = object.value(name);
+        if (!foundValue.isNull())
+            return foundValue;
+
+        qWarning() << "Could not find '" << name << "'";
+        return {};
+    }
+};
+
 int main(int argc, char **argv){
     QGuiApplication app(argc, argv);
 
@@ -80,21 +114,31 @@ int main(int argc, char **argv){
     QJsonDocument json = bridgeReader.metaData();
     Q_ASSERT(!json.isArray());
 
-    const auto artboardSets = findJsonValue(u"artboardSets"_qs, json.object());
-
-    const auto buttonTemplate = findJsonObject(u"buttonTemplate"_qs, json.object());
+    // TODO: When using real-life data, 'artboardSets' will probably not
+    // be on the root node, so this will need to be adjusted!
+    const auto artboardSets = JsonTools::value("artboardSets", json.object());
+    if (artboardSets.isNull())
+        return -1;
+    const auto buttonTemplate = JsonTools::findObjectWithName("ButtonTemplate", artboardSets.toArray());
     if (buttonTemplate.isEmpty()) {
-        qWarning() << "Could not find 'buttonTemplate'";
+        qWarning() << "Could not find 'ButtonTemplate'!";
         return -1;
     }
-
-    const auto state_idle = findJsonObject(u"state_idle"_qs, buttonTemplate);
+    const auto artboards = buttonTemplate.value("artboards");
+    if (artboards.isNull()) {
+        qWarning() << "Could not find 'artboards' inside buttonTemplate!";
+        return -1;
+    }
+    const auto state_idle = JsonTools::findObjectWithName("state=idle", artboards.toArray());
     if (state_idle.isEmpty()) {
-        qWarning() << "Could not find 'state_idle'";
+        qWarning() << "Could not find 'state_idle' inside buttonTemplate!";
         return -1;
     }
 
-    qDebug() << "state_idle:" << state_idle[u"name"_qs];
+    qDebug() << state_idle; 
+
+
+    // qDebug() << "state_idle:" << state_idle[u"name"_qs];
 
 // TODO: først finn ArtBoardSets. Og dette er ikke qmlId !
     // TODO: implement try/catch
