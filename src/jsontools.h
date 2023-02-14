@@ -3,6 +3,7 @@
 
 namespace JsonTools {
 
+QJsonValue::Type lastType = QJsonValue::Undefined;
 QJsonObject lastObject;
 QJsonArray lastArray;
 QJsonValue lastValue;
@@ -23,6 +24,7 @@ static QJsonObject objectInArray(const QString &name, const QJsonArray &array = 
             continue;
         const QString foundName = nameValue.toString();
         if (foundName == name) {
+            lastType = QJsonValue::Object;
             lastObject = object;
             return lastObject;
         }
@@ -40,6 +42,8 @@ static QJsonObject objectInObject(const QString &name, const QJsonObject object 
         throw std::invalid_argument("could not find '" + name.toStdString() + "'");
     if (!foundValue.isObject())
         throw std::invalid_argument("'" + name.toStdString() + "' is not an object!");
+    
+    lastType = QJsonValue::Object;
     lastObject = foundValue.toObject();
     return lastObject;
 }
@@ -52,6 +56,8 @@ static QJsonArray arrayInObject(const QString &name, const QJsonObject object = 
         throw std::invalid_argument("could not find '" + name.toStdString() + "'");
     if (!foundValue.isArray())
         throw std::invalid_argument("'" + name.toStdString() + "' is not an array!");
+    
+    lastType = QJsonValue::Array;
     lastArray = foundValue.toArray();
     return lastArray;
 }
@@ -63,6 +69,8 @@ static QJsonValue valueInObject(const QString &name, const QJsonObject object = 
     const auto foundValue = object.value(name);
     if (foundValue.isUndefined())
         throw std::invalid_argument("could not find '" + name.toStdString() + "'");
+    
+    lastType = QJsonValue::String;
     lastValue = foundValue;
     return lastValue;
 }
