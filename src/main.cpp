@@ -4,6 +4,7 @@
 
 #include "jsontools.h"
 #include "qtbridgereader.h"
+#include "stylegenerator.h"
 
 int main(int argc, char **argv){
     QGuiApplication app(argc, argv);

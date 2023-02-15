@@ -10,6 +10,8 @@ find_package(Qt6 6.5 REQUIRED Gui Quick QuickControls2)
 qt_add_executable(application
     src/main.cpp
     src/qtbridgereader.h
+    src/jsontools.h src/jsontools.cpp
+    src/stylegenerator.h src/stylegenerator.cpp
 )
 
 qt_add_resources(application "resources"
