@@ -16,15 +16,16 @@ int main(int argc, char **argv){
 
     // const QString fileName(argv[1]);
     const QString fileName(u":/data/testdata.qtbridge"_qs);
-    const QString styleDirectory("myStyle");
+    const QString targetPath("myStyle");
 
     try {
 
         const QtBridgeReader bridgeReader(fileName);
+        const QString resourcePath = bridgeReader.unzippedPath();
         const QJsonDocument doc = bridgeReader.metaData();
 
-        createStyleDirectory(styleDirectory);
-        generateButton(doc);
+        createStyleDirectory(targetPath);
+        generateButton(doc, resourcePath);
 
     } catch (std::exception &e) {
         qWarning() << e.what();

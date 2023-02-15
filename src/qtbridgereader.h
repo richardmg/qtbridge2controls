@@ -53,9 +53,9 @@ public:
         return m_metaData;
     }
 
-    QString getFilePath(const QString &fileName) const
+    QString unzippedPath() const
     {
-        return m_destDir + "/" + fileName;
+        return m_destDir;
     }
 
     QStringList entryList()

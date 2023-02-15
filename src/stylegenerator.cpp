@@ -17,16 +17,16 @@ QJsonObject getControlTemplate(const QString &templateName, const QJsonDocument 
     return objectInArrayWithName(templateName);
 }
 
-QString styleFolder;
+QString styleDir;
 
 void createStyleDirectory(const QString path)
 {
-    styleFolder = path;
+    styleDir = path;
     if (!QDir().mkpath(path))
         throw std::runtime_error("Could not create style directory: " + path.toStdString());
 }
 
-void generateButton(const QJsonDocument &doc)
+void generateButton(const QJsonDocument &doc, const QString &resourcePath)
 {
     getControlTemplate("ButtonTemplate", doc);
     array("artboards");
@@ -37,7 +37,13 @@ void generateButton(const QJsonDocument &doc)
     object("assetData");
     value("assetPath");
 
-    qDebug() << "background image:" << lastValue.toString();
+    const QString bgFileName = lastValue.toString();
+    const QString bgPath = resourcePath + '/' + bgFileName;
+    QFile bgFile = QFile(bgPath);
+    if (!bgFile.exists())
+        throw std::runtime_error("File doesn't exist: " + bgPath.toStdString());
+
+    bgFile.copy(styleDir + u"/buttonBackground.svg"_qs);
 }
 
 } // namespace
