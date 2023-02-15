@@ -21,6 +21,8 @@ int main(int argc, char **argv){
 
         QtBridgeReader bridgeReader(fileName);
         QJsonDocument doc = bridgeReader.metaData();
+
+        using namespace StyleGenerator;
         generateButton(doc);
 
     } catch (std::exception &e) {

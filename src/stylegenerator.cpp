@@ -6,6 +6,8 @@
 
 using namespace JsonTools;
 
+namespace StyleGenerator {
+
 QJsonObject getControlTemplate(const QString &templateName, const QJsonDocument &doc)
 {
     // TODO: When using real-life data, 'artboardSets' will probably not
@@ -27,3 +29,5 @@ void generateButton(const QJsonDocument &doc)
 
     qDebug() << "background image:" << lastValue.toString();
 }
+
+} // namespace
