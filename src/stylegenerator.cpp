@@ -43,7 +43,7 @@ void copyImage(const QString srcName, const QString targetName)
 {
     const QString srcFilePath = resourcePath + '/' + srcName;
     const QString targetFilePath = styleDir + "/" + targetName;
-    qCDebug(lcStyleGenerator) << "  copy" << srcFilePath << "to" << targetFilePath;
+    qCDebug(lcStyleGenerator) << "  copying" << srcFilePath << "to" << targetFilePath;
     QFile srcFile = QFile(srcFilePath);
     if (!srcFile.exists())
         throw std::runtime_error("File doesn't exist: " + srcFilePath.toStdString());
@@ -86,11 +86,18 @@ void generateImage(const QString &targetFileNameBase
     , const QString &state
     , const QJsonObject templateObject)
 {
-    qCDebug(lcStyleGenerator) << " generate image for state" << state;
-    const QString objectName = QString("state=") + state;
-    const QString srcName = getImageFileName(templateObject, objectName);
-    const QString targetName = targetFileNameBase + "-" + fileNameState + ".svg";
-    copyImage(srcName, targetName);
+    qCDebug(lcStyleGenerator) << " generating image for state" << state;
+    try {
+
+        const QString objectName = QString("state=") + state;
+        const QString srcName = getImageFileName(templateObject, objectName);
+        const QString targetName = targetFileNameBase + "-" + fileNameState + ".svg";
+        copyImage(srcName, targetName);
+
+    } catch (std::exception &e)
+    {
+        qWarning() << "WARNING:" << e.what();
+    }
 }
 
 /**
@@ -114,7 +121,7 @@ void generateImages(const QString &targetFileNameBase, const QJsonObject templat
 
 void generateButton(const QJsonDocument &doc)
 {
-    qCDebug(lcStyleGenerator) << "starting to generate button";
+    qCDebug(lcStyleGenerator) << "generating button";
 
     const QJsonObject buttonTemplate = getTemplateRootObject("ButtonTemplate", doc);
     generateImages("button-background", buttonTemplate);

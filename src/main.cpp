@@ -28,7 +28,7 @@ int main(int argc, char **argv){
         generateButton(doc);
 
     } catch (std::exception &e) {
-        qWarning() << e.what();
+        qWarning() << "ERROR:" << e.what();
         return -1;
     }
 
