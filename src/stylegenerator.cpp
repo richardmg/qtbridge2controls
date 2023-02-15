@@ -83,15 +83,15 @@ QString getImageFileName(const QJsonObject &templateObject, const QString &state
 */
 void generateImage(const QString &targetFileNameBase
     , const QString fileNameState
-    , const QString &state
+    , const QString &jsonState
     , const QJsonObject templateObject)
 {
-    qCDebug(lcStyleGenerator) << " generating image for state" << state;
+    qCDebug(lcStyleGenerator) << " generating image for state" << jsonState;
     try {
 
-        const QString objectName = QString("state=") + state;
+        const QString objectName = QString("state=") + jsonState;
         const QString srcName = getImageFileName(templateObject, objectName);
-        const QString targetName = targetFileNameBase + "-" + fileNameState + ".svg";
+        const QString targetName = targetFileNameBase + fileNameState + ".svg";
         copyImage(srcName, targetName);
 
     } catch (std::exception &e)
@@ -108,7 +108,7 @@ void generateImage(const QString &targetFileNameBase
     , const QString &state
     , const QJsonObject templateObject)
 {
-    generateImage(targetFileNameBase, state, state, templateObject);
+    generateImage(targetFileNameBase, "-" + state, state, templateObject);
 }
 
 void generateImages(const QString &targetFileNameBase, const QJsonObject templateObject)
