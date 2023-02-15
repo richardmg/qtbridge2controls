@@ -23,7 +23,7 @@ void generateStyleFolder(const QString path)
 {
     styleFolder = path;
     if (!QDir().mkpath(path))
-        throw std::invalid_argument("Could not create style directory: " + path.toStdString());
+        throw std::runtime_error("Could not create style directory: " + path.toStdString());
 }
 
 void generateButton(const QJsonDocument &doc)

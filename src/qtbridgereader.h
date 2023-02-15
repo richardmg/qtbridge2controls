@@ -16,31 +16,31 @@ public:
         + "/" + qApp->applicationName();
 
         if (QFileInfo(bridgeFile).suffix().compare(u"qtbridge"_qs) != 0)
-            throw std::invalid_argument("Input is not a .qtbridge file!");
+            throw std::runtime_error("Input is not a .qtbridge file!");
 
         QZipReader zip(bridgeFile);
         if (!zip.isReadable())
-            throw std::invalid_argument("Could not read input file: " + bridgeFile.toStdString());
+            throw std::runtime_error("Could not read input file: " + bridgeFile.toStdString());
         if (!QDir().mkpath(m_destDir))
-            throw std::invalid_argument("Could not create tmp path: " + m_destDir.toStdString());
+            throw std::runtime_error("Could not create tmp path: " + m_destDir.toStdString());
         if (!zip.extractAll(m_destDir))
-            throw std::invalid_argument("Could not unzip input file: " + std::to_string(zip.status()));
+            throw std::runtime_error("Could not unzip input file: " + std::to_string(zip.status()));
     
         const auto fileList = QDir(m_destDir).entryList(QStringList("*.metadata"));
         if (fileList.isEmpty())
-            throw std::invalid_argument("Could not fine a .metadata inside the input file!");
+            throw std::runtime_error("Could not fine a .metadata inside the input file!");
 
         const QString metaDataFileName = m_destDir + "/" + fileList.first();
         QFile metaDataFile(metaDataFileName);
         if (!metaDataFile.exists())
-            throw std::invalid_argument("File doesn't exist: " + metaDataFileName.toStdString());
+            throw std::runtime_error("File doesn't exist: " + metaDataFileName.toStdString());
         if (!metaDataFile.open(QFile::ReadOnly))
-            throw std::invalid_argument("Could not open file for reading: " + metaDataFileName.toStdString());
+            throw std::runtime_error("Could not open file for reading: " + metaDataFileName.toStdString());
 
         QJsonParseError error;
         m_metaData = QJsonDocument::fromJson(metaDataFile.readAll(), &error);
         if (m_metaData.isNull())
-            throw std::invalid_argument("Could not parse json file: " + error.errorString().toStdString());
+            throw std::runtime_error("Could not parse json file: " + error.errorString().toStdString());
     }
 
     ~QtBridgeReader()
