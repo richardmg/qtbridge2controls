@@ -17,15 +17,12 @@ int main(int argc, char **argv){
     const QString fileName(u":/data/testdata.qtbridge"_qs);
 
     try {
-        QtBridgeReader bridgeReader(fileName);
-        QJsonDocument json = bridgeReader.metaData();
-
-        // TODO: When using real-life data, 'artboardSets' will probably not
-        // be on the root node, so this will need to be adjusted!
         using namespace JsonTools;
 
-        array("artboardSets", json.object());
-        objectInArrayWithName("ButtonTemplate");
+        QtBridgeReader bridgeReader(fileName);
+        QJsonDocument doc = bridgeReader.metaData();
+
+        getControlTemplate("ButtonTemplate", doc);
         array("artboards");
         objectInArrayWithName("state=idle");
         array("children");

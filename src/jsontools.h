@@ -75,4 +75,13 @@ static QJsonValue value(const QString &key, const QJsonObject object = lastObjec
     return lastValue;
 }
 
+QJsonObject getControlTemplate(const QString &templateName, const QJsonDocument &doc)
+{
+    // TODO: When using real-life data, 'artboardSets' will probably not
+    // be on the root node, so this function will need to be adjusted!
+    using namespace JsonTools;
+    array("artboardSets", doc.object());
+    return objectInArrayWithName(templateName);
+}
+
 } // namespace
