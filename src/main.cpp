@@ -16,15 +16,10 @@ int main(int argc, char **argv){
     // const QString fileName(argv[1]);
     const QString fileName(u":/data/testdata.qtbridge"_qs);
 
-    QtBridgeReader bridgeReader(fileName);
-    if (bridgeReader.hasError()) {
-        qWarning() << bridgeReader.errorMessage();
-        return -1;
-    }
-
-    QJsonDocument json = bridgeReader.metaData();
-
     try {
+        QtBridgeReader bridgeReader(fileName);
+        QJsonDocument json = bridgeReader.metaData();
+
         // TODO: When using real-life data, 'artboardSets' will probably not
         // be on the root node, so this will need to be adjusted!
         using namespace JsonTools;
@@ -42,7 +37,7 @@ int main(int argc, char **argv){
         qDebug() << "background image:" << lastValue.toString();
 
     } catch (std::exception &e) {
-        qWarning() << "Failed to parse qtbridge:" << e.what();
+        qWarning() << e.what();
         return -1;
     }
 

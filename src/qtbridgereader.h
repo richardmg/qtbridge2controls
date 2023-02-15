@@ -5,6 +5,8 @@
 #include <QJsonDocument>
 #include <QtGui/private/qzipreader_p.h>
 
+#include <stdexcept>
+
 class QtBridgeReader
 {
 public:
@@ -14,57 +16,31 @@ public:
         + "/" + qApp->applicationName();
 
         if (QFileInfo(bridgeFile).suffix().compare(u"qtbridge"_qs) != 0)
-        {
-            m_errorMessage = QStringLiteral("The file is not a .qtbridge file: %1").arg(bridgeFile);
-            return;
-        }
+            throw std::invalid_argument("Input is not a .qtbridge file!");
 
         QZipReader zip(bridgeFile);
         if (!zip.isReadable())
-        {
-            m_errorMessage = QStringLiteral("Could not read: %1").arg(bridgeFile);
-            return;
-        }
-
+            throw std::invalid_argument("Could not read input file: " + bridgeFile.toStdString());
         if (!QDir().mkpath(m_destDir))
-        {
-            m_errorMessage = QStringLiteral("Could not create tmp path: %1").arg(m_destDir);
-            return;
-        }
-
+            throw std::invalid_argument("Could not create tmp path: " + m_destDir.toStdString());
         if (!zip.extractAll(m_destDir))
-        {
-            m_errorMessage = QStringLiteral("Could not extract bridge file: %1").arg(zip.status());
-            return;
-        }
+            throw std::invalid_argument("Could not unzip input file: " + std::to_string(zip.status()));
     
         const auto fileList = QDir(m_destDir).entryList(QStringList("*.metadata"));
-        if (fileList.isEmpty()) {
-            m_errorMessage = QStringLiteral("Could not find a .metadata file inside the .qtbridge file: %1")
-                .arg(entryList().join(u"; "_qs));
-            return;
-        }
+        if (fileList.isEmpty())
+            throw std::invalid_argument("Could not fine a .metadata inside the input file!");
 
         const QString metaDataFileName = m_destDir + "/" + fileList.first();
         QFile metaDataFile(metaDataFileName);
         if (!metaDataFile.exists())
-        {
-            m_errorMessage = QStringLiteral("File doesn't exists: %1").arg(metaDataFileName);
-            return;
-        }
-
+            throw std::invalid_argument("File doesn't exist: " + metaDataFileName.toStdString());
         if (!metaDataFile.open(QFile::ReadOnly))
-        {
-            m_errorMessage = QStringLiteral("Could not open %1 for reading!").arg(metaDataFileName);
-            return;
-        }
+            throw std::invalid_argument("Could not open file for reading: " + metaDataFileName.toStdString());
 
         QJsonParseError error;
         m_metaData = QJsonDocument::fromJson(metaDataFile.readAll(), &error);
-        if (m_metaData.isNull()) {
-            m_errorMessage = error.errorString();
-            return;
-        }
+        if (m_metaData.isNull())
+            throw std::invalid_argument("Could not parse json file: " + error.errorString().toStdString());
     }
 
     ~QtBridgeReader()
@@ -82,16 +58,6 @@ public:
         return m_destDir + "/" + fileName;
     }
 
-    bool hasError() const
-    {
-        return !m_errorMessage.isEmpty();
-    }
-
-    QString errorMessage() const
-    {
-        return m_errorMessage;
-    }
-
     QStringList entryList()
     {
         return QDir(m_destDir).entryList();
@@ -100,7 +66,6 @@ public:
 private: 
     QString m_destDir;
     QJsonDocument m_metaData;
-    QString m_errorMessage;
 };
 
 #endif
