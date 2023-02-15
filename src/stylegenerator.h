@@ -1,4 +1,7 @@
+#include <QtCore>
 #include <QJsonDocument>
+
+Q_DECLARE_LOGGING_CATEGORY(lcStyleGenerator)
 
 namespace StyleGenerator
 {

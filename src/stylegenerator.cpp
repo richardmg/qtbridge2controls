@@ -1,9 +1,12 @@
+#include <QtCore>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QDir>
 
 #include "stylegenerator.h"
 #include "jsontools.h"
+
+Q_LOGGING_CATEGORY(lcStyleGenerator, "qt.stylegenerator")
 
 using namespace JsonTools;
 
@@ -39,10 +42,12 @@ void setTargetPath(const QString path)
 void copyImage(const QString srcName, const QString targetName)
 {
     const QString srcFilePath = resourcePath + '/' + srcName;
+    const QString targetFilePath = styleDir + "/" + targetName;
+    qCDebug(lcStyleGenerator) << "  copy" << srcFilePath << "to" << targetFilePath;
     QFile srcFile = QFile(srcFilePath);
     if (!srcFile.exists())
         throw std::runtime_error("File doesn't exist: " + srcFilePath.toStdString());
-    srcFile.copy(styleDir + "/" + targetName);
+    srcFile.copy(targetFilePath);
 }
 
 /**
@@ -81,6 +86,7 @@ void generateImage(const QString &targetFileNameBase
     , const QString &state
     , const QJsonObject templateObject)
 {
+    qCDebug(lcStyleGenerator) << " generate image for state" << state;
     const QString objectName = QString("state=") + state;
     const QString srcName = getImageFileName(templateObject, objectName);
     const QString targetName = targetFileNameBase + "-" + fileNameState + ".svg";
@@ -108,6 +114,8 @@ void generateImages(const QString &targetFileNameBase, const QJsonObject templat
 
 void generateButton(const QJsonDocument &doc)
 {
+    qCDebug(lcStyleGenerator) << "starting to generate button";
+
     const QJsonObject buttonTemplate = getTemplateRootObject("ButtonTemplate", doc);
     generateImages("button-background", buttonTemplate);
 }
