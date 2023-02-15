@@ -18,21 +18,10 @@ int main(int argc, char **argv){
     const QString fileName(u":/data/testdata.qtbridge"_qs);
 
     try {
-        using namespace JsonTools;
 
         QtBridgeReader bridgeReader(fileName);
         QJsonDocument doc = bridgeReader.metaData();
-
-        getControlTemplate("ButtonTemplate", doc);
-        array("artboards");
-        objectInArrayWithName("state=idle");
-        array("children");
-        objectInArrayWithName("background");
-        object("metadata");
-        object("assetData");
-        value("assetPath");
-
-        qDebug() << "background image:" << lastValue.toString();
+        generateButton(doc);
 
     } catch (std::exception &e) {
         qWarning() << e.what();

@@ -13,3 +13,17 @@ QJsonObject getControlTemplate(const QString &templateName, const QJsonDocument 
     array("artboardSets", doc.object());
     return objectInArrayWithName(templateName);
 }
+
+void generateButton(const QJsonDocument &doc)
+{
+    getControlTemplate("ButtonTemplate", doc);
+    array("artboards");
+    objectInArrayWithName("state=idle");
+    array("children");
+    objectInArrayWithName("background");
+    object("metadata");
+    object("assetData");
+    value("assetPath");
+
+    qDebug() << "background image:" << lastValue.toString();
+}

@@ -1,3 +1,3 @@
 #include <QJsonDocument>
 
-QJsonObject getControlTemplate(const QString &templateName, const QJsonDocument &doc);
+void generateButton(const QJsonDocument &doc);
