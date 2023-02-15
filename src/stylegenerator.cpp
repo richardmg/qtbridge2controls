@@ -74,19 +74,42 @@ QString getImageFileName(const QJsonObject &templateObject, const QString &state
 
 /**
  * Resolve the image file name for the current state, and copy the
- * image into the style folder using the given targetFileName.
+ * image into the style folder using the given targetFileNameBase and fileNameState.
 */
-void generateImage(const QString &targetFileName, const QString &state, const QJsonObject templateObject)
+void generateImage(const QString &targetFileNameBase
+    , const QString fileNameState
+    , const QString &state
+    , const QJsonObject templateObject)
 {
-    const QString srcName = getImageFileName(templateObject, QString("state=") + state);
-    copyImage(srcName, targetFileName + ".svg");
+    const QString objectName = QString("state=") + state;
+    const QString srcName = getImageFileName(templateObject, objectName);
+    const QString targetName = targetFileNameBase + "-" + fileNameState + ".svg";
+    copyImage(srcName, targetName);
+}
+
+/**
+ * Convenience function for the cases where the state in the filename
+ * should be the same as the state in the json file.
+*/
+void generateImage(const QString &targetFileNameBase
+    , const QString &state
+    , const QJsonObject templateObject)
+{
+    generateImage(targetFileNameBase, state, state, templateObject);
+}
+
+void generateImages(const QString &targetFileNameBase, const QJsonObject templateObject)
+{
+    generateImage(targetFileNameBase, "pressed", templateObject);
+    generateImage(targetFileNameBase, "hovered", templateObject);
+    generateImage(targetFileNameBase, "checked", templateObject);
+    generateImage(targetFileNameBase, "", "idle", templateObject);
 }
 
 void generateButton(const QJsonDocument &doc)
 {
     const QJsonObject buttonTemplate = getTemplateRootObject("ButtonTemplate", doc);
-    generateImage("button-background", "idle", buttonTemplate);
-    generateImage("button-background-hovered", "hovered", buttonTemplate);
+    generateImages("button-background", buttonTemplate);
 }
 
 } // namespace
