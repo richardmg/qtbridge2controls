@@ -3,7 +3,8 @@
 namespace StyleGenerator
 {
 
-void createStyleDirectory(const QString path);
-void generateButton(const QJsonDocument &doc, const QString &resourcePath);
+void setResourcePath(const QString &path);
+void setTargetPath(const QString path);
+void generateButton(const QJsonDocument &doc);
 
 } // namespace

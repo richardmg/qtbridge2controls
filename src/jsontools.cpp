@@ -9,7 +9,7 @@ QJsonValue lastValue;
 
 // Returns the object with the given name in the array. The
 // object needs to have a "name" key, as such.
-QJsonObject objectInArrayWithName(const QString &name, const QJsonArray &array)
+QJsonObject getObjectInArrayWithName(const QString &name, const QJsonArray &array)
 {
     for (auto it = array.constBegin(); it != array.constEnd(); ++it)
     {
@@ -33,7 +33,7 @@ QJsonObject objectInArrayWithName(const QString &name, const QJsonArray &array)
 
 // Returns the object with the given key in the object. The
 // object needs to have a "name" key, as such.
-QJsonObject object(const QString &key, const QJsonObject object)
+QJsonObject getObject(const QString &key, const QJsonObject object)
 {
     const auto foundValue = object.value(key);
     if (foundValue.isUndefined())
@@ -46,7 +46,7 @@ QJsonObject object(const QString &key, const QJsonObject object)
 }
 
 // Returns the array of the given key in the object
-QJsonArray array(const QString &key, const QJsonObject object)
+QJsonArray getArray(const QString &key, const QJsonObject object)
 {
     const auto foundValue = object.value(key);
     if (foundValue.isUndefined())
@@ -60,7 +60,7 @@ QJsonArray array(const QString &key, const QJsonObject object)
 
 // Returns the value of the given key in the object. Same as
 // object.value(), but throws an exception if not found.
-QJsonValue value(const QString &key, const QJsonObject object)
+QJsonValue getValue(const QString &key, const QJsonObject object)
 {
     const auto foundValue = object.value(key);
     if (foundValue.isUndefined())

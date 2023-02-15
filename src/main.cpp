@@ -21,11 +21,11 @@ int main(int argc, char **argv){
     try {
 
         const QtBridgeReader bridgeReader(fileName);
-        const QString resourcePath = bridgeReader.unzippedPath();
         const QJsonDocument doc = bridgeReader.metaData();
 
-        createStyleDirectory(targetPath);
-        generateButton(doc, resourcePath);
+        setResourcePath(bridgeReader.unzippedPath());
+        setTargetPath(targetPath);
+        generateButton(doc);
 
     } catch (std::exception &e) {
         qWarning() << e.what();
