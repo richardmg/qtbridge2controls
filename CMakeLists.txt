@@ -22,8 +22,6 @@ qt_add_resources(application "resources"
 
 target_link_libraries(application
     PRIVATE
-        Qt6::Quick
-        Qt6::QuickControls2
         Qt6::GuiPrivate
 )
 

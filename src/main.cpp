@@ -1,6 +1,4 @@
 #include <QtGui>
-#include <QtQml>
-#include <QtQuick>
 
 #include "jsontools.h"
 #include "qtbridgereader.h"
@@ -30,7 +28,5 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    // QQmlApplicationEngine engine(QUrl("qrc:///main.qml"));
-    // return app.exec();
     return 0;
 }
