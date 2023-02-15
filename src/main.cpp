@@ -17,8 +17,8 @@ int main(int argc, char **argv){
 
     try {
 
-        QtBridgeReader bridgeReader(fileName);
-        QJsonDocument doc = bridgeReader.metaData();
+        const QtBridgeReader bridgeReader(fileName);
+        const QJsonDocument doc = bridgeReader.metaData();
 
         using namespace StyleGenerator;
         generateButton(doc);
