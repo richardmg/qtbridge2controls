@@ -4,6 +4,8 @@
 #include "qtbridgereader.h"
 #include "stylegenerator.h"
 
+using namespace StyleGenerator;
+
 int main(int argc, char **argv){
     QGuiApplication app(argc, argv);
 
@@ -14,13 +16,14 @@ int main(int argc, char **argv){
 
     // const QString fileName(argv[1]);
     const QString fileName(u":/data/testdata.qtbridge"_qs);
+    const QString styleDirectory("myStyle");
 
     try {
 
         const QtBridgeReader bridgeReader(fileName);
         const QJsonDocument doc = bridgeReader.metaData();
 
-        using namespace StyleGenerator;
+        createStyleDirectory(styleDirectory);
         generateButton(doc);
 
     } catch (std::exception &e) {

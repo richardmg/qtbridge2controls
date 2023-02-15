@@ -19,7 +19,7 @@ QJsonObject getControlTemplate(const QString &templateName, const QJsonDocument 
 
 QString styleFolder;
 
-void generateStyleFolder(const QString path)
+void createStyleDirectory(const QString path)
 {
     styleFolder = path;
     if (!QDir().mkpath(path))
