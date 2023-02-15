@@ -116,6 +116,11 @@ void generateImages(const QString &targetFileNameBase, const QJsonObject templat
     generateImage(targetFileNameBase, "pressed", templateObject);
     generateImage(targetFileNameBase, "hovered", templateObject);
     generateImage(targetFileNameBase, "checked", templateObject);
+
+    // TODO: For the remaining states, there is a mismatch between the name of
+    // the state in the imagine style and the name of the state in the figma
+    // template (which we should fix in the template)!
+    generateImage(targetFileNameBase, "-disabled", "blocked", templateObject);
     generateImage(targetFileNameBase, "", "idle", templateObject);
 }
 
