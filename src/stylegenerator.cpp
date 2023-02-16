@@ -113,15 +113,21 @@ void generateImage(const QString &targetFileNameBase
 
 void generateImages(const QString &targetFileNameBase, const QJsonObject templateObject)
 {
+    // states: disabled, pressed, checked, checkable, focused, highlighted, flat, mirrored, hovered
     generateImage(targetFileNameBase, "pressed", templateObject);
-    generateImage(targetFileNameBase, "hovered", templateObject);
     generateImage(targetFileNameBase, "checked", templateObject);
+    generateImage(targetFileNameBase, "hovered", templateObject);
 
     // TODO: For the remaining states, there is a mismatch between the name of
     // the state in the imagine style and the name of the state in the figma
     // template (which we should fix in the template)!
     generateImage(targetFileNameBase, "-disabled", "blocked", templateObject);
     generateImage(targetFileNameBase, "", "idle", templateObject);
+
+    // TODO: The following states have no design in Figma yet:
+    // checkable, focused, highlighted, flat, mirrored, (and dark mode)
+    // They should follow the naming in
+    // https://doc.qt.io/qt-6/qtquickcontrols2-imagine.html
 }
 
 void generateButton(const QJsonDocument &doc)
