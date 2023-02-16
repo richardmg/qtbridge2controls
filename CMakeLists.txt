@@ -14,12 +14,6 @@ qt_add_executable(qtbridge2controls
     src/stylegenerator.h src/stylegenerator.cpp
 )
 
-qt_add_resources(qtbridge2controls "resources"
-    PREFIX "/"
-    FILES
-        data/testdata.qtbridge
-)
-
 target_link_libraries(qtbridge2controls
     PRIVATE
         Qt6::GuiPrivate
