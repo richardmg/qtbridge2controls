@@ -9,22 +9,38 @@ using namespace StyleGenerator;
 int main(int argc, char **argv){
     QGuiApplication app(argc, argv);
 
-    // if (argc < 2) {
-    //     qDebug() << "Usage: appname <--images-only> [.qtbridge]";
-    //     return 0;
-    // }
+    QCommandLineParser parser;
+    parser.setApplicationDescription("Creates a Qt Quick Controls style from a .qtbridge file.");
+    parser.addHelpOption();
+    parser.addOptions({
+        {{"d", "directory"},
+            QCoreApplication::translate("main", "The target directory where the style will be created."),
+            QCoreApplication::translate("main", "directory"),
+            "."}
+    });
+    parser.addPositionalArgument("qtbridge",
+        QCoreApplication::translate("main", "The .qtbridge file to create a style from."));
 
-    // const QString fileName(argv[1]);
-    const QString fileName(u":/data/testdata.qtbridge"_qs);
-    const QString targetPath("myStyle");
+    if (!parser.parse(QCoreApplication::arguments())) {
+        qWarning() << parser.errorText();
+        return -1;
+    }
+
+    if (parser.positionalArguments().length() != 1) {
+        parser.showHelp();
+        return -1;
+    }
+
+    const QString src = parser.positionalArguments().first();
+    const QString dest = parser.value("d");
 
     try {
 
-        const QtBridgeReader bridgeReader(fileName);
+        const QtBridgeReader bridgeReader(src);
         const QJsonDocument doc = bridgeReader.metaData();
 
         setResourcePath(bridgeReader.unzippedPath());
-        setTargetPath(targetPath);
+        setTargetPath(dest);
         generateButton(doc);
 
     } catch (std::exception &e) {
