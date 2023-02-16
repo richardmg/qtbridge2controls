@@ -1,34 +1,26 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(application VERSION 0.1 LANGUAGES CXX)
+project(qtbridge2controls VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 6.5 REQUIRED Gui Quick QuickControls2)
 
-qt_add_executable(application
+qt_add_executable(qtbridge2controls
     src/main.cpp
     src/qtbridgereader.h
     src/jsontools.h src/jsontools.cpp
     src/stylegenerator.h src/stylegenerator.cpp
 )
 
-qt_add_resources(application "resources"
+qt_add_resources(qtbridge2controls "resources"
     PREFIX "/"
     FILES
         data/testdata.qtbridge
 )
 
-target_link_libraries(application
+target_link_libraries(qtbridge2controls
     PRIVATE
         Qt6::GuiPrivate
-)
-
-set_target_properties(application PROPERTIES
-    MACOSX_BUNDLE_GUI_IDENTIFIER application.me.com
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
 )
