@@ -115,7 +115,7 @@ void generateImage(const QString &baseName
 
     } catch (std::exception &e)
     {
-        qWarning() << "WARNING:" << e.what();
+        qWarning() << "Warning:" << e.what();
     }
 }
 
