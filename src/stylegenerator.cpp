@@ -102,6 +102,11 @@ void generateImage(const QString &targetFileNameBase
 
         const QString objectName = QString("state=") + jsonState;
         const QString srcName = getImageFileName(templateObject, objectName);
+        // Require the images to be png for now. While we could convert svg's to
+        // png's on the fly, we should rather investigate how we can do this during build
+        // time (with the work done to create png icons from svg from cmake).
+        if (!srcName.endsWith(".png"))
+            throw std::runtime_error("The image needs to be png: " + srcName.toStdString());
         const QString targetName = targetFileNameBase + fileNameState + ".png";
         copyImage(srcName, targetName);
 
