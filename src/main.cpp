@@ -16,7 +16,9 @@ int main(int argc, char **argv){
         {{"d", "directory"},
             QCoreApplication::translate("main", "The target directory where the style will be created."),
             QCoreApplication::translate("main", "directory"),
-            "."}
+            "."},
+        {{"v", "verbose"},
+            QCoreApplication::translate("main", "Debug out what gets generated.")}
     });
     parser.addPositionalArgument("qtbridge",
         QCoreApplication::translate("main", "The .qtbridge file to create a style from."));
@@ -25,6 +27,8 @@ int main(int argc, char **argv){
         qWarning() << parser.errorText();
         return -1;
     }
+
+    setVerbose(parser.isSet("verbose"));
 
     if (parser.positionalArguments().length() != 1) {
         parser.showHelp();

@@ -6,14 +6,13 @@
 #include "stylegenerator.h"
 #include "jsontools.h"
 
-Q_LOGGING_CATEGORY(lcStyleGenerator, "qt.stylegenerator")
-
 using namespace JsonTools;
 
 namespace StyleGenerator {
 
-QString resourcePath;
-QString styleDir;
+static QString resourcePath;
+static QString styleDir;
+static bool verboseOptionSet = false;
 
 /**
  * Sets the patch to the resource directory inside
@@ -35,6 +34,18 @@ void setTargetPath(const QString path)
         throw std::runtime_error("Could not create target path: " + path.toStdString());
 }
 
+void setVerbose(bool verbose)
+{
+    verboseOptionSet = true;
+}
+
+void debug(const QString &msg)
+{
+    if (!verboseOptionSet)
+        return;
+    qDebug() << msg;
+}
+
 /**
  * Copies the given srcName image from the unzipped
  * qtbridge folder and into the target style folder.
@@ -43,7 +54,7 @@ void copyImage(const QString srcName, const QString targetName)
 {
     const QString srcFilePath = resourcePath + '/' + srcName;
     const QString targetFilePath = styleDir + "/" + targetName;
-    qCDebug(lcStyleGenerator) << "  copying" << srcFilePath << "to" << targetFilePath;
+    debug("   copying" + srcFilePath + "to" + targetFilePath);
     QFile srcFile = QFile(srcFilePath);
     if (!srcFile.exists())
         throw std::runtime_error("File doesn't exist: " + srcFilePath.toStdString());
@@ -86,7 +97,7 @@ void generateImage(const QString &targetFileNameBase
     , const QString &jsonState
     , const QJsonObject templateObject)
 {
-    qCDebug(lcStyleGenerator) << " generating image for state" << jsonState;
+    debug("   generating image for state" + jsonState);
     try {
 
         const QString objectName = QString("state=") + jsonState;
@@ -132,7 +143,7 @@ void generateImages(const QString &targetFileNameBase, const QJsonObject templat
 
 void generateButton(const QJsonDocument &doc)
 {
-    qCDebug(lcStyleGenerator) << "generating button";
+    debug("generating button");
 
     const QJsonObject buttonTemplate = getTemplateRootObject("ButtonTemplate", doc);
     generateImages("button-background", buttonTemplate);
