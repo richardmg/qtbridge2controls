@@ -36,14 +36,17 @@ void setTargetPath(const QString path)
 
 void setVerbose(bool verbose)
 {
-    verboseOptionSet = true;
+    verboseOptionSet = verbose;
 }
 
-void debug(const QString &msg)
+void debug(const QString &msg = "")
 {
     if (!verboseOptionSet)
         return;
-    qDebug() << msg;
+    if (msg.isEmpty())
+        qDebug().noquote() << "\n";
+    else
+        qDebug() << msg;
 }
 
 /**
@@ -54,7 +57,7 @@ void copyImage(const QString srcName, const QString targetName)
 {
     const QString srcFilePath = resourcePath + '/' + srcName;
     const QString targetFilePath = styleDir + "/" + targetName;
-    debug("   copying " + srcFilePath + " to " + targetFilePath);
+    debug("copying " + srcFilePath + " to " + targetFilePath);
     QFile srcFile = QFile(srcFilePath);
     if (!srcFile.exists())
         throw std::runtime_error("File doesn't exist: " + srcFilePath.toStdString());
@@ -97,7 +100,7 @@ void generateImage(const QString &targetFileNameBase
     , const QString &jsonState
     , const QJsonObject templateObject)
 {
-    debug("   generating image for state " + jsonState);
+    debug("generating image for state " + jsonState);
     try {
 
         const QString objectName = QString("state=") + jsonState;
@@ -148,6 +151,7 @@ void generateImages(const QString &targetFileNameBase, const QJsonObject templat
 
 void generateButton(const QJsonDocument &doc)
 {
+    debug();
     debug("generating button");
 
     const QJsonObject buttonTemplate = getTemplateRootObject("ButtonTemplate", doc);
