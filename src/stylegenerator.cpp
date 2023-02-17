@@ -54,7 +54,7 @@ void copyImage(const QString srcName, const QString targetName)
 {
     const QString srcFilePath = resourcePath + '/' + srcName;
     const QString targetFilePath = styleDir + "/" + targetName;
-    debug("   copying" + srcFilePath + "to" + targetFilePath);
+    debug("   copying " + srcFilePath + " to " + targetFilePath);
     QFile srcFile = QFile(srcFilePath);
     if (!srcFile.exists())
         throw std::runtime_error("File doesn't exist: " + srcFilePath.toStdString());
@@ -97,12 +97,12 @@ void generateImage(const QString &targetFileNameBase
     , const QString &jsonState
     , const QJsonObject templateObject)
 {
-    debug("   generating image for state" + jsonState);
+    debug("   generating image for state " + jsonState);
     try {
 
         const QString objectName = QString("state=") + jsonState;
         const QString srcName = getImageFileName(templateObject, objectName);
-        const QString targetName = targetFileNameBase + fileNameState + ".svg";
+        const QString targetName = targetFileNameBase + fileNameState + ".png";
         copyImage(srcName, targetName);
 
     } catch (std::exception &e)
