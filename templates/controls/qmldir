@@ -1,0 +1,4 @@
+# This file needs to be auto generated!
+module MyStyle
+Button 2.15 Button.qml
+import QtQuick.Controls.Fusion auto
