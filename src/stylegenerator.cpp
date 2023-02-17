@@ -93,9 +93,9 @@ QString getImageFileName(const QJsonObject &templateObject, const QString &state
 
 /**
  * Resolve the image file name for the current state, and copy the
- * image into the style folder using the given targetFileNameBase and fileNameState.
+ * image into the style folder using the given baseName and fileNameState.
 */
-void generateImage(const QString &targetFileNameBase
+void generateImage(const QString &baseName
     , const QString fileNameState
     , const QString &jsonState
     , const QJsonObject templateObject)
@@ -110,7 +110,7 @@ void generateImage(const QString &targetFileNameBase
         // time (with the work done to create png icons from svg from cmake).
         if (!srcName.endsWith(".png"))
             throw std::runtime_error("The image needs to be png: " + srcName.toStdString());
-        const QString targetName = targetFileNameBase + fileNameState + ".png";
+        const QString targetName = baseName + fileNameState + ".png";
         copyImage(srcName, targetName);
 
     } catch (std::exception &e)
@@ -123,25 +123,25 @@ void generateImage(const QString &targetFileNameBase
  * Convenience function for the cases where the state in the filename
  * should be the same as the state in the json file.
 */
-void generateImage(const QString &targetFileNameBase
+void generateImage(const QString &baseName
     , const QString &state
     , const QJsonObject templateObject)
 {
-    generateImage(targetFileNameBase, "-" + state, state, templateObject);
+    generateImage(baseName, "-" + state, state, templateObject);
 }
 
-void generateImages(const QString &targetFileNameBase, const QJsonObject templateObject)
+void generateImages(const QString &baseName, const QJsonObject templateObject)
 {
     // states: disabled, pressed, checked, checkable, focused, highlighted, flat, mirrored, hovered
-    generateImage(targetFileNameBase, "pressed", templateObject);
-    generateImage(targetFileNameBase, "checked", templateObject);
-    generateImage(targetFileNameBase, "hovered", templateObject);
+    generateImage(baseName, "pressed", templateObject);
+    generateImage(baseName, "checked", templateObject);
+    generateImage(baseName, "hovered", templateObject);
 
     // TODO: For the remaining states, there is a mismatch between the name of
     // the state in the imagine style and the name of the state in the figma
     // template (which we should fix in the template)!
-    generateImage(targetFileNameBase, "-disabled", "blocked", templateObject);
-    generateImage(targetFileNameBase, "", "idle", templateObject);
+    generateImage(baseName, "-disabled", "blocked", templateObject);
+    generateImage(baseName, "", "idle", templateObject);
 
     // TODO: The following states have no design in Figma yet:
     // checkable, focused, highlighted, flat, mirrored, (and dark mode)
