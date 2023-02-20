@@ -35,19 +35,19 @@ T.Button {
     }
 
     background: NinePatchImage {
-        source: "button-background.png"
-        // NinePatchImageSelector on source {
-        //     states: [
-        //         {"disabled": !control.enabled},
-        //         {"pressed": control.down},
-        //         {"checked": control.checked},
-        //         {"checkable": control.checkable},
-        //         {"focused": control.visualFocus},
-        //         {"highlighted": control.highlighted},
-        //         {"mirrored": control.mirrored},
-        //         {"flat": control.flat},
-        //         {"hovered": control.enabled && control.hovered}
-        //     ]
-        // }
+        source: Qt.resolvedUrl("button-background")
+        NinePatchImageSelector on source {
+            states: [
+                {"disabled": !control.enabled},
+                {"pressed": control.down},
+                {"checked": control.checked},
+                {"checkable": control.checkable},
+                {"focused": control.visualFocus},
+                {"highlighted": control.highlighted},
+                {"mirrored": control.mirrored},
+                {"flat": control.flat},
+                {"hovered": control.enabled && control.hovered}
+            ]
+        }
     }
 }
