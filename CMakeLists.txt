@@ -14,6 +14,13 @@ qt_add_executable(qtbridge2controls
     src/stylegenerator.h src/stylegenerator.cpp
 )
 
+qt_add_resources(qtbridge2controls "controls"
+    PREFIX "/"
+    BASE templates/controls
+    FILES
+        templates/controls/button.qml
+)
+
 target_link_libraries(qtbridge2controls
     PRIVATE
         Qt6::GuiPrivate

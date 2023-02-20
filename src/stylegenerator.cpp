@@ -50,18 +50,20 @@ void debug(const QString &msg = "")
 }
 
 /**
- * Copies the given srcName image from the unzipped
- * qtbridge folder and into the target style folder.
+ * Copies the given file into the style folder.
+ * If destFileName is empty, the file name of the src will be used.
  */
-void copyImage(const QString srcName, const QString targetName)
+void copyFileToStyleFolder(const QString srcPath, const QString destFileName = "")
 {
-    const QString srcFilePath = resourcePath + '/' + srcName;
-    const QString targetFilePath = styleDir + "/" + targetName;
-    debug("copying " + srcFilePath + " to " + targetFilePath);
-    QFile srcFile = QFile(srcFilePath);
+    QFile srcFile = QFile(srcPath);
     if (!srcFile.exists())
-        throw std::runtime_error("File doesn't exist: " + srcFilePath.toStdString());
-    srcFile.copy(targetFilePath);
+        throw std::runtime_error("File doesn't exist: " + srcPath.toStdString());
+    QString targetName = destFileName;
+    if (targetName.isEmpty())
+        targetName = QFileInfo(srcFile).fileName();
+    const QString targetPath = styleDir + "/" + targetName;
+    debug("copying " + srcPath + " to " + targetPath);
+    srcFile.copy(targetPath);
 }
 
 /**
@@ -110,8 +112,10 @@ void generateImage(const QString &baseName
         // time (with the work done to create png icons from svg from cmake).
         if (!srcName.endsWith(".png"))
             throw std::runtime_error("The image needs to be png: " + srcName.toStdString());
+
+        const QString srcPath = resourcePath + '/' + srcName;
         const QString targetName = baseName + fileNameState + ".png";
-        copyImage(srcName, targetName);
+        copyFileToStyleFolder(srcPath, targetName);
 
     } catch (std::exception &e)
     {
@@ -154,6 +158,7 @@ void generateButton(const QJsonDocument &doc)
     debug();
     debug("generating button");
 
+    copyFileToStyleFolder(":/button.qml");
     const QJsonObject buttonTemplate = getTemplateRootObject("ButtonTemplate", doc);
     generateImages("button-background", buttonTemplate);
 }
