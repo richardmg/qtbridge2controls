@@ -155,8 +155,9 @@ void generateImages(const QString &baseName, const QJsonObject templateObject)
 
 void generateQmlDir()
 {
+    const QString styleName = QFileInfo(styleDir).fileName();
     QString qmldir;
-    qmldir += "module MyStyle\n";
+    qmldir += "module " + styleName + "\n";
     qmldir += "Button 1.0 Button.qml\n";
     const QString path = styleDir + "/qmldir";
     debug("generating qmldir: " + path);
