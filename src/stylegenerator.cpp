@@ -153,12 +153,27 @@ void generateImages(const QString &baseName, const QJsonObject templateObject)
     // https://doc.qt.io/qt-6/qtquickcontrols2-imagine.html
 }
 
+void generateQmlDir()
+{
+    QString qmldir;
+    qmldir += "module MyStyle\n";
+    qmldir += "Button 1.0 Button.qml\n";
+    const QString path = styleDir + "/qmldir";
+    debug("generating qmldir: " + path);
+    QFile file(path);
+    if(!file.open(QIODevice::WriteOnly))
+        throw std::runtime_error("Could not open file for writing: " + path.toStdString());
+
+    QTextStream out(&file);
+    out << qmldir;
+}
+
 void generateButton(const QJsonDocument &doc)
 {
     debug();
     debug("generating button");
 
-    copyFileToStyleFolder(":/button.qml");
+    copyFileToStyleFolder(":/Button.qml");
     const QJsonObject buttonTemplate = getTemplateRootObject("ButtonTemplate", doc);
     generateImages("button-background", buttonTemplate);
 }
@@ -166,6 +181,7 @@ void generateButton(const QJsonDocument &doc)
 void generateStyle(const QJsonDocument &doc)
 {
     generateButton(doc);
+    generateQmlDir();
 }
 
 } // namespace

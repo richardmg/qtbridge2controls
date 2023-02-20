@@ -18,7 +18,7 @@ qt_add_resources(qtbridge2controls "controls"
     PREFIX "/"
     BASE templates/controls
     FILES
-        templates/controls/button.qml
+        templates/controls/Button.qml
 )
 
 target_link_libraries(qtbridge2controls
