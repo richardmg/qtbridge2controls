@@ -163,4 +163,9 @@ void generateButton(const QJsonDocument &doc)
     generateImages("button-background", buttonTemplate);
 }
 
+void generateStyle(const QJsonDocument &doc)
+{
+    generateButton(doc);
+}
+
 } // namespace

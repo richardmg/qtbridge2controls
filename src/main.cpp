@@ -45,7 +45,7 @@ int main(int argc, char **argv){
 
         setResourcePath(bridgeReader.unzippedPath());
         setTargetPath(dest);
-        generateButton(doc);
+        generateStyle(doc);
 
     } catch (std::exception &e) {
         qWarning() << "Error:" << e.what();
