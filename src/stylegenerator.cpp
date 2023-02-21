@@ -86,10 +86,10 @@ QJsonObject getTemplateRootObject(const QString &templateName, const QJsonDocume
 }
 
 /**
- * Get the file name (inside the unzipped qtbridget file) of the
+ * Get the file path (inside the unzipped qtbridget file) of the
  * image that is produced for the given state.
 */
-QString getImageFileName(const QJsonObject &templateObject, const QString &state)
+QString getImagePath(const QJsonObject &templateObject, const QString &state)
 {
     getArray("artboards", templateObject);
     getObjectInArrayWithName(state);
@@ -113,7 +113,7 @@ void generateImage(const QString &baseName
     try {
 
         const QString objectName = QString("state=") + jsonState;
-        const QString srcName = getImageFileName(templateObject, objectName);
+        const QString srcName = getImagePath(templateObject, objectName);
         // Require the images to be png for now. While we could convert svg's to
         // png's on the fly, we should rather investigate how we can do this during build
         // time (with the work done to create png icons from svg from cmake).
