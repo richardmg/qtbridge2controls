@@ -30,8 +30,6 @@ void setResourcePath(const QString &path)
 void setTargetPath(const QString path)
 {
     styleDir = path;
-    if (!QDir().mkpath(path))
-        throw std::runtime_error("Could not create target path: " + path.toStdString());
 }
 
 void setVerbose(bool verbose)
@@ -58,10 +56,19 @@ void copyFileToStyleFolder(const QString srcPath, const QString destFileName = "
     QFile srcFile = QFile(srcPath);
     if (!srcFile.exists())
         throw std::runtime_error("File doesn't exist: " + srcPath.toStdString());
+
     QString targetName = destFileName;
     if (targetName.isEmpty())
         targetName = QFileInfo(srcFile).fileName();
+
     const QString targetPath = styleDir + "/" + targetName;
+    QFileInfo targetPathInfo(targetPath);
+    const QDir targetDir = targetPathInfo.absoluteDir();
+    if (!targetDir.exists()) {
+        if (!QDir().mkpath(targetDir.path()))
+            throw std::runtime_error("Could not create target path: " + targetPath.toStdString());
+    }
+
     debug("copying " + srcPath + " to " + targetPath);
     srcFile.copy(targetPath);
 }
@@ -114,7 +121,7 @@ void generateImage(const QString &baseName
             throw std::runtime_error("The image needs to be png: " + srcName.toStdString());
 
         const QString srcPath = resourcePath + '/' + srcName;
-        const QString targetName = baseName + fileNameState + ".png";
+        const QString targetName = "images/" + baseName + fileNameState + ".png";
         copyFileToStyleFolder(srcPath, targetName);
 
     } catch (std::exception &e)

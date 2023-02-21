@@ -35,7 +35,7 @@ T.Button {
     }
 
     background: NinePatchImage {
-        source: Qt.resolvedUrl("button-background")
+        source: Qt.resolvedUrl("images/button-background")
         NinePatchImageSelector on source {
             states: [
                 {"disabled": !control.enabled},
