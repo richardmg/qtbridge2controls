@@ -89,74 +89,93 @@ QJsonObject getTemplateRootObject(const QString &templateName, const QJsonDocume
  * Get the file path (inside the unzipped qtbridget file) of the
  * image that is produced for the given state.
 */
-QString getImagePath(const QJsonObject &templateObject, const QString &state)
-{
-    getArray("artboards", templateObject);
-    getObjectInArrayWithName(state);
-    getArray("children");
-    getObjectInArrayWithName("background");
-    getObject("metadata");
-    getObject("assetData");
-    return getValue("assetPath").toString();
-}
+// QString getImagePath(const QJsonObject &templateObject, const QString &state)
+// {
+//     getArray("artboards", templateObject);
+//     getObjectInArrayWithName(state);
+//     getArray("children");
+//     getObjectInArrayWithName("background");
+//     getObject("metadata");
+//     getObject("assetData");
+//     return getValue("assetPath").toString();
+// }
 
 /**
  * Resolve the image file name for the current state, and copy the
  * image into the style folder using the given baseName and fileNameState.
 */
-void generateImage(const QString &baseName
-    , const QString fileNameState
-    , const QString &jsonState
-    , const QJsonObject templateObject)
-{
-    debug("generating image for state " + jsonState);
-    try {
+// void generateImage(const QString &baseName
+//     , const QString fileNameState
+//     , const QString &jsonState
+//     , QFunctionPointer searchFunction
+//     , const QJsonObject &root)
+// {
+//     debug("generating image for state " + jsonState);
+//     try {
 
-        const QString objectName = QString("state=") + jsonState;
-        const QString srcName = getImagePath(templateObject, objectName);
-        // Require the images to be png for now. While we could convert svg's to
-        // png's on the fly, we should rather investigate how we can do this during build
-        // time (with the work done to create png icons from svg from cmake).
-        if (!srcName.endsWith(".png"))
-            throw std::runtime_error("The image needs to be png: " + srcName.toStdString());
+//         const QString objectName = QString("state=") + jsonState;
+//         const QString srcName = searchFunction(jsonState, root);
+//         const QString srcName = getImagePath(templateObject, objectName);
+//         // Require the images to be png for now. While we could convert svg's to
+//         // png's on the fly, we should rather investigate how we can do this during build
+//         // time (with the work done to create png icons from svg from cmake).
+//         if (!srcName.endsWith(".png"))
+//             throw std::runtime_error("The image needs to be png: " + srcName.toStdString());
 
-        const QString srcPath = resourcePath + '/' + srcName;
-        const QString targetName = "images/" + baseName + fileNameState + ".png";
-        copyFileToStyleFolder(srcPath, targetName);
+//         const QString srcPath = resourcePath + '/' + srcName;
+//         const QString targetName = "images/" + baseName + fileNameState + ".png";
+//         copyFileToStyleFolder(srcPath, targetName);
 
-    } catch (std::exception &e) {
-        qWarning() << "Warning: could not generate image:" << baseName << "," << jsonState << "reason:" << e.what();
-    }
-}
+//     } catch (std::exception &e) {
+//         qWarning() << "Warning: could not generate image:" << baseName << "," << jsonState << "reason:" << e.what();
+//     }
+// }
 
 /**
  * Convenience function for the cases where the state in the filename
  * should be the same as the state in the json file.
 */
-void generateImage(const QString &baseName
-    , const QString &state
-    , const QJsonObject templateObject)
+// void generateImage(const QString &baseName
+//     , const QString &state
+//     , QFunctionPointer searchFunction
+//     , const QJsonObject root)
+// {
+//     generateImage(baseName, "-" + state, state, searchFunction, root);
+// }
+
+// void generateImages(const QString &baseName, const QStringList &states, const QJsonObject &root)
+// {
+//     for (const auto state : states) {
+//         generateImage(baseName, state, root);
+//     }
+
+//     // generateImage(baseName, "pressed", templateObject);
+//     // generateImage(baseName, "checked", templateObject);
+//     // generateImage(baseName, "hovered", templateObject);
+
+//     // TODO: For the remaining states, there is a mismatch between the name of
+//     // the state in the imagine style and the name of the state in the figma
+//     // template (which we should fix in the template)!
+//     // generateImage(baseName, "-disabled", "blocked", templateObject);
+//     // generateImage(baseName, "", "idle", templateObject);
+
+//     // TODO: The following states have no design in Figma yet:
+//     // checkable, focused, highlighted, flat, mirrored, (and dark mode)
+//     // They should follow the naming in
+//     // https://doc.qt.io/qt-6/qtquickcontrols2-imagine.html
+// }
+
+void generateImage(const QString &baseName, const QString state, const QString srcName)
 {
-    generateImage(baseName, "-" + state, state, templateObject);
-}
+    // Require the images to be png for now. While we could convert svg's to
+    // png's on the fly, we should rather investigate how we can do this during build
+    // time (with the work done to create png icons from svg from cmake).
+    if (!srcName.endsWith(".png"))
+        throw std::runtime_error("The image needs to be png: " + srcName.toStdString());
 
-void generateImages(const QString &baseName, const QJsonObject templateObject)
-{
-    // states: disabled, pressed, checked, checkable, focused, highlighted, flat, mirrored, hovered
-    generateImage(baseName, "pressed", templateObject);
-    generateImage(baseName, "checked", templateObject);
-    generateImage(baseName, "hovered", templateObject);
-
-    // TODO: For the remaining states, there is a mismatch between the name of
-    // the state in the imagine style and the name of the state in the figma
-    // template (which we should fix in the template)!
-    generateImage(baseName, "-disabled", "blocked", templateObject);
-    generateImage(baseName, "", "idle", templateObject);
-
-    // TODO: The following states have no design in Figma yet:
-    // checkable, focused, highlighted, flat, mirrored, (and dark mode)
-    // They should follow the naming in
-    // https://doc.qt.io/qt-6/qtquickcontrols2-imagine.html
+    const QString srcPath = resourcePath + '/' + srcName;
+    const QString targetName = "images/" + baseName + "-" + state + ".png";
+    copyFileToStyleFolder(srcPath, targetName);
 }
 
 void generateQmlDir()
@@ -183,9 +202,29 @@ void generateButton(const QJsonDocument &doc)
     debug();
     debug("generating Button");
 
+    const QString imageBaseName("button-background");
+    const QStringList states = {"idle", "pressed", "checked", "hovered"};
+    auto search = [](const QString &state, const QJsonObject &root) {
+        getArray("artboards", root);
+        getObjectInArrayWithName(QString("state=") + state);
+        getArray("children");
+        getObjectInArrayWithName("background");
+        getObject("metadata");
+        getObject("assetData");
+        return getValue("assetPath").toString();
+    };
+
     copyFileToStyleFolder(":/Button.qml");
-    const QJsonObject buttonTemplate = getTemplateRootObject("ButtonTemplate", doc);
-    generateImages("button-background", buttonTemplate);
+    const QJsonObject root = getTemplateRootObject("ButtonTemplate", doc);
+    for (const auto state : states) {
+        try {
+            debug("generating image for state " + state);
+            const auto assetPath = search(state, root);
+            generateImage(imageBaseName, state, assetPath);
+        } catch (std::exception &e) {
+            qWarning() << "Warning: could not generate image:" << imageBaseName << "," << state << "reason:" << e.what();
+        }
+    }
 }
 
 void generateCheckBox(const QJsonDocument &doc)
@@ -194,10 +233,10 @@ void generateCheckBox(const QJsonDocument &doc)
     debug("generating CheckBox");
 
     copyFileToStyleFolder(":/CheckBox.qml");
-    const QJsonObject checkBoxBackground = getTemplateRootObject("CheckboxBackground", doc);
-    const QJsonObject checkBoxIndicator = getTemplateRootObject("CheckboxIndicator", doc);
-    generateImages("checkbox-background", checkBoxBackground);
-    generateImages("checkbox-indicator", checkBoxIndicator);
+    // const QJsonObject checkBoxBackground = getTemplateRootObject("CheckboxBackground", doc);
+    // const QJsonObject checkBoxIndicator = getTemplateRootObject("CheckboxIndicator", doc);
+    // generateImages("checkbox-background", checkBoxBackground);
+    // generateImages("checkbox-indicator", checkBoxIndicator);
 }
 
 void generateStyle(const QJsonDocument &doc)
