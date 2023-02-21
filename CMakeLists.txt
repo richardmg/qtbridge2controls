@@ -19,6 +19,7 @@ qt_add_resources(qtbridge2controls "controls"
     BASE templates/controls
     FILES
         templates/controls/Button.qml
+        templates/controls/CheckBox.qml
 )
 
 target_link_libraries(qtbridge2controls

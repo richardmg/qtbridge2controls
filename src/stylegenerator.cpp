@@ -169,6 +169,7 @@ void generateQmlDir()
     QString qmldir;
     qmldir += "module " + styleName + "\n";
     qmldir += "Button 1.0 Button.qml\n";
+    qmldir += "CheckBox 1.0 CheckBox.qml\n";
 
     QFile file(path);
     if(!file.open(QIODevice::WriteOnly))
@@ -181,16 +182,27 @@ void generateQmlDir()
 void generateButton(const QJsonDocument &doc)
 {
     debug();
-    debug("generating button");
+    debug("generating Button");
 
     copyFileToStyleFolder(":/Button.qml");
     const QJsonObject buttonTemplate = getTemplateRootObject("ButtonTemplate", doc);
     generateImages("button-background", buttonTemplate);
 }
 
+void generateCheckBox(const QJsonDocument &doc)
+{
+    debug();
+    debug("generating CheckBox");
+
+    copyFileToStyleFolder(":/CheckBox.qml");
+    const QJsonObject checkBoxBackground = getTemplateRootObject("CheckBoxBackground", doc);
+    // generateImages("checkbox-background", checkBoxBackground);
+}
+
 void generateStyle(const QJsonDocument &doc)
 {
     generateButton(doc);
+    generateCheckBox(doc);
     generateQmlDir();
 }
 

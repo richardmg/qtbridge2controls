@@ -1,6 +1,6 @@
 import QtQuick
-import QtQuick.Templates as T
 import QtQuick.Controls.impl
+import QtQuick.Templates as T
 
 T.Button {
     id: control
