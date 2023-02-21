@@ -124,9 +124,8 @@ void generateImage(const QString &baseName
         const QString targetName = "images/" + baseName + fileNameState + ".png";
         copyFileToStyleFolder(srcPath, targetName);
 
-    } catch (std::exception &e)
-    {
-        qWarning() << "Warning:" << baseName << "," << jsonState << ":" << e.what();
+    } catch (std::exception &e) {
+        qWarning() << "Warning: could not generate image:" << baseName << "," << jsonState << "reason:" << e.what();
     }
 }
 
