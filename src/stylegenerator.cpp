@@ -119,16 +119,16 @@ void generateQmlDir()
     out << qmldir;
 }
 
+template <typename SearchFunction>
 void generateImages(
-    const QJsonObject &root,
     const QString &baseName,
     const QStringList &states,
-    JsonSearchFunction search)
+    SearchFunction search)
 {
     for (const auto state : states) {
         try {
             debug("generating image for state " + state);
-            const auto assetPath = search(state, root);
+            const auto assetPath = search(state);
             copyImageToStyleFolder(baseName, state, assetPath);
         } catch (std::exception &e) {
             qWarning() << "Warning: could not generate image:" << baseName << "," << state << "reason:" << e.what();
@@ -142,11 +142,12 @@ void generateButton(const QJsonDocument &doc)
     debug("generating Button");
     copyFileToStyleFolder(":/Button.qml");
     generateImages(
-        getTemplateRootObject("ButtonTemplate", doc),
         "button-background",
         {"idle", "pressed", "checked", "hovered"},
-        [](const QString &state, const QJsonObject &root) {
-            getArray("artboards", root);
+        [&doc](const QString &state) {
+            getArray("artboardSets", doc.object());
+            getObjectInArrayWithName("ButtonTemplate");
+            getArray("artboards");
             getObjectInArrayWithName(QString("state=") + state);
             getArray("children");
             getObjectInArrayWithName("background");
