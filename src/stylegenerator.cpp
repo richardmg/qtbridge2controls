@@ -126,7 +126,7 @@ void generateImage(const QString &baseName
 
     } catch (std::exception &e)
     {
-        qWarning() << "Warning:" << e.what();
+        qWarning() << "Warning:" << baseName << "," << jsonState << ":" << e.what();
     }
 }
 
@@ -196,7 +196,9 @@ void generateCheckBox(const QJsonDocument &doc)
 
     copyFileToStyleFolder(":/CheckBox.qml");
     const QJsonObject checkBoxBackground = getTemplateRootObject("CheckboxBackground", doc);
+    const QJsonObject checkBoxIndicator = getTemplateRootObject("CheckboxIndicator", doc);
     generateImages("checkbox-background", checkBoxBackground);
+    generateImages("checkbox-indicator", checkBoxBackground);
 }
 
 void generateStyle(const QJsonDocument &doc)

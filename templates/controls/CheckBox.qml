@@ -27,7 +27,7 @@ T.CheckBox {
         x: control.text ? (control.mirrored ? control.width - width - control.rightPadding : control.leftPadding) : control.leftPadding + (control.availableWidth - width) / 2
         y: control.topPadding + (control.availableHeight - height) / 2
 
-        source: Imagine.url + "checkbox-indicator"
+        source: Qt.resolvedUrl("images/checkbox-indicator")
         ImageSelector on source {
             states: [
                 {"disabled": !control.enabled},
@@ -53,7 +53,7 @@ T.CheckBox {
     }
 
     background: NinePatchImage {
-        source: Imagine.url + "checkbox-background"
+        source: Qt.resolvedUrl("images/checkbox-background")
         NinePatchImageSelector on source {
             states: [
                 {"disabled": !control.enabled},
