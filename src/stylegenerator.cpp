@@ -197,7 +197,7 @@ void generateCheckBox(const QJsonDocument &doc)
     const QJsonObject checkBoxBackground = getTemplateRootObject("CheckboxBackground", doc);
     const QJsonObject checkBoxIndicator = getTemplateRootObject("CheckboxIndicator", doc);
     generateImages("checkbox-background", checkBoxBackground);
-    generateImages("checkbox-indicator", checkBoxBackground);
+    generateImages("checkbox-indicator", checkBoxIndicator);
 }
 
 void generateStyle(const QJsonDocument &doc)
