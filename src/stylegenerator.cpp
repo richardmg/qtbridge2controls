@@ -162,12 +162,14 @@ void generateImages(const QString &baseName, const QJsonObject templateObject)
 
 void generateQmlDir()
 {
+    const QString path = styleDir + "/qmldir";
     const QString styleName = QFileInfo(styleDir).fileName();
+    debug("generating qmldir: " + path);
+
     QString qmldir;
     qmldir += "module " + styleName + "\n";
     qmldir += "Button 1.0 Button.qml\n";
-    const QString path = styleDir + "/qmldir";
-    debug("generating qmldir: " + path);
+
     QFile file(path);
     if(!file.open(QIODevice::WriteOnly))
         throw std::runtime_error("Could not open file for writing: " + path.toStdString());
