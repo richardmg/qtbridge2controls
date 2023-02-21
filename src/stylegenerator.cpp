@@ -195,8 +195,8 @@ void generateCheckBox(const QJsonDocument &doc)
     debug("generating CheckBox");
 
     copyFileToStyleFolder(":/CheckBox.qml");
-    const QJsonObject checkBoxBackground = getTemplateRootObject("CheckBoxBackground", doc);
-    // generateImages("checkbox-background", checkBoxBackground);
+    const QJsonObject checkBoxBackground = getTemplateRootObject("CheckboxBackground", doc);
+    generateImages("checkbox-background", checkBoxBackground);
 }
 
 void generateStyle(const QJsonDocument &doc)
