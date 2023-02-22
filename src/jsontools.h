@@ -19,10 +19,10 @@ QJsonArray getArray(const QString &key, const QJsonObject object = lastObject);
 QJsonValue getValue(const QString &key, const QJsonObject object = lastObject);
 
 // QtBridge specific API
-QJsonObject getTemplateRootObject(const QString &templateName, const QJsonDocument &doc);
-QJsonObject getObjectInArrayWithName(const QString &name, const QJsonArray &array = lastArray);
+QJsonObject getArtboardSet(const QString &templateName, const QJsonDocument &doc);
 QJsonObject getArtboardWithState(const QString &state, const QJsonObject object = lastObject);
 QJsonObject getArtboardChildWithName(const QString &name, const QJsonObject object = lastObject);
+QJsonObject getObjectInArrayWithName(const QString &name, const QJsonArray &array = lastArray);
 QString getAssetPathInChild(const QJsonObject object = lastObject);
 
 } // namespace

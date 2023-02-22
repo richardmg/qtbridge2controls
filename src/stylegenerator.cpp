@@ -132,12 +132,12 @@ void generateButton(const QJsonDocument &doc)
     debug("generating Button");
     copyFileToStyleFolder(":/Button.qml");
 
-    const auto root = getTemplateRootObject("ButtonTemplate", doc);
+    const auto buttonArtboardSet = getArtboardSet("ButtonTemplate", doc);
     generateImages(
         "button-background",
         {"idle", "pressed", "checked", "hovered"},
-        [&root](const QString &state) {
-            getArtboardWithState(state, root);
+        [&buttonArtboardSet](const QString &state) {
+            getArtboardWithState(state, buttonArtboardSet);
             getArtboardChildWithName("background");
             return getAssetPathInChild();
         });
@@ -150,32 +150,25 @@ void generateCheckBox(const QJsonDocument &doc)
 
     copyFileToStyleFolder(":/CheckBox.qml");
 
-    const auto root = getTemplateRootObject("CheckboxBackground", doc);
+    const auto backgroundArtboardSet = getArtboardSet("CheckboxBackground", doc);
     generateImages(
         "checkbox-background",
         {"idle", "pressed", "checked", "hovered"},
-        [&root](const QString &state) {
-            getArtboardWithState(state, root);
+        [&backgroundArtboardSet](const QString &state) {
+            getArtboardWithState(state, backgroundArtboardSet);
             getArtboardChildWithName("background");
             return getAssetPathInChild();
         });
 
+    const auto indicatorArtboardSet = getArtboardSet("CheckboxIndicator", doc);
     generateImages(
         "checkbox-indicator",
         {"idle", "pressed", "checked", "hovered"},
-        [&root](const QString &state) {
-            getArray("artboards", root);
-            getObjectInArrayWithName(QString("state=") + state);
-            getArray("children");
-            getObjectInArrayWithName("checkBackground");
-            getObject("metadata");
-            getObject("assetData");
-            return getValue("assetPath").toString();
+        [&indicatorArtboardSet](const QString &state) {
+            getArtboardWithState(state, indicatorArtboardSet);
+            getArtboardChildWithName("checkBackground");
+            return getAssetPathInChild();
         });
-    // const QJsonObject checkBoxBackground = getTemplateRootObject("CheckboxBackground", doc);
-    // const QJsonObject checkBoxIndicator = getTemplateRootObject("CheckboxIndicator", doc);
-    // generateImages("checkbox-background", checkBoxBackground);
-    // generateImages("checkbox-indicator", checkBoxIndicator);
 }
 
 void generateStyle(const QJsonDocument &doc)

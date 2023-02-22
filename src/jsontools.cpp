@@ -72,26 +72,20 @@ QJsonValue getValue(const QString &key, const QJsonObject object)
 
 /**
  * Get the json object that points to the root of the
- * tree that describes a control / template
+ * tree that describes a control (quick) / template (figma) / artboard (qtbridge)
 */
-QJsonObject getTemplateRootObject(const QString &templateName, const QJsonDocument &doc)
+QJsonObject getArtboardSet(const QString &artboardName, const QJsonDocument &doc)
 {
     // TODO: When using real-life data, 'artboardSets' will probably not
     // be on the root node, so this function will need to be adjusted!
     getArray("artboardSets", doc.object());
-    return getObjectInArrayWithName(templateName);
+    return getObjectInArrayWithName(artboardName);
 }
 
 /**
- * 'object' needs to have a key with name 'children' that point to an array.
- * This function will then return the child in the array with the 'name: name'.
+ * \a object should point to an artboard set (e.g ButtonTemplate). This function will
+ * then return the child artboard with the name that matches \a state.
 */
-QJsonObject getArtboardChildWithName(const QString &name, const QJsonObject object)
-{
-    getArray("children", object);
-    return getObjectInArrayWithName(name);
-}
-
 QJsonObject getArtboardWithState(const QString &state, const QJsonObject object)
 {
     getArray("artboards", object);
@@ -99,9 +93,21 @@ QJsonObject getArtboardWithState(const QString &state, const QJsonObject object)
 }
 
 /**
+ * 'object' should point to an artboard (e.g an object that describes a control
+ * for a certain state). This function will then return the child in the
+ * children array with the 'name: name'.
+*/
+QJsonObject getArtboardChildWithName(const QString &name, const QJsonObject object)
+{
+    getArray("children", object);
+    return getObjectInArrayWithName(name);
+}
+
+/**
  * Nodes with an image will store the path to that image inside the metadata
  * Since this strucutre seems to be the same for all nodes, it's factored out
  * to this function.
+ * \sa https://www.qt.io/blog/qt-bridge-metadata-format
 */
 QString getAssetPathInChild(const QJsonObject object)
 {
