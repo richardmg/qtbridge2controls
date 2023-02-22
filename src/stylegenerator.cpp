@@ -99,10 +99,12 @@ void generateQmlDir()
     const QString styleName = QFileInfo(styleDir).fileName();
     debug("generating qmldir: " + path);
 
+    const QString version(" 1.0 ");
     QString qmldir;
     qmldir += "module " + styleName + "\n";
-    qmldir += "Button 1.0 Button.qml\n";
-    qmldir += "CheckBox 1.0 CheckBox.qml\n";
+    qmldir += "Button" + version + "Button.qml\n";
+    qmldir += "CheckBox" + version + "CheckBox.qml\n";
+    qmldir += "Switch" + version + "Switch.qml\n";
 
     QFile file(path);
     if(!file.open(QIODevice::WriteOnly))
@@ -148,7 +150,6 @@ void generateButton(const QJsonDocument &doc)
 void generateCheckBox(const QJsonDocument &doc)
 {
     debugHeader("generating CheckBox");
-
     copyFileToStyleFolder(":/CheckBox.qml");
 
     const auto backgroundArtboardSet = getArtboardSet("CheckboxBackground", doc);
@@ -172,10 +173,36 @@ void generateCheckBox(const QJsonDocument &doc)
         });
 }
 
+void generateSwitch(const QJsonDocument &doc)
+{
+    debugHeader("generating Switch");
+    copyFileToStyleFolder(":/Switch.qml");
+
+    const auto backgroundArtboardSet = getArtboardSet("SwitchBackground", doc);
+    generateImages(
+        "switch-background",
+        {"idle", "pressed", "checked", "hovered"},
+        [&backgroundArtboardSet](const QString &state) {
+            getArtboardWithState(state, backgroundArtboardSet);
+            getArtboardChildWithName("background");
+            return getImagePathInMetaData();
+        });
+
+    const auto indicatorArtboardSet = getArtboardSet("CheckboxIndicator", doc);
+    generateImages(
+        "checkbox-indicator",
+        {"idle", "pressed", "checked", "hovered"},
+        [&indicatorArtboardSet](const QString &state) {
+            getArtboardWithState(state, indicatorArtboardSet);
+            getArtboardChildWithName("checkBackground");
+            return getImagePathInMetaData();
+        });
+}
 void generateStyle(const QJsonDocument &doc)
 {
     generateButton(doc);
     generateCheckBox(doc);
+    generateSwitch(doc);
     generateQmlDir();
 }
 

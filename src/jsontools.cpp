@@ -28,7 +28,7 @@ QJsonObject getObjectInArrayWithName(const QString &name, const QJsonArray &arra
         }
     }
 
-    throw std::runtime_error("could not find object '" + name.toStdString() + "' in array!");
+    throw std::runtime_error("could not find object with name '" + name.toStdString() + "' in array!");
 }
 
 // Returns the object with the given key in the object. The
