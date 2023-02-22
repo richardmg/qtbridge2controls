@@ -83,8 +83,10 @@ void copyImageToStyleFolder(const QString &baseName, const QString state, const 
     if (!srcName.endsWith(".png"))
         throw std::runtime_error("The image needs to be png: " + srcName.toStdString());
 
+    // Special case: the 'idle' state should not be included in the file name
+    const QString targetState = (state == "idle") ? "" : "-" + state;
     const QString srcPath = resourcePath + '/' + srcName;
-    const QString targetName = "images/" + baseName + "-" + state + ".png";
+    const QString targetName = "images/" + baseName + targetState + ".png";
     copyFileToStyleFolder(srcPath, targetName);
 }
 
@@ -154,7 +156,7 @@ void generateCheckBox(const QJsonDocument &doc)
 
     const auto root = getTemplateRootObject("CheckboxBackground", doc);
     generateImages(
-        "button-background",
+        "checkbox-background",
         {"idle", "pressed", "checked", "hovered"},
         [&root](const QString &state) {
             getArray("artboards", root);
