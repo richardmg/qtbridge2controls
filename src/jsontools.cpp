@@ -82,4 +82,32 @@ QJsonObject getTemplateRootObject(const QString &templateName, const QJsonDocume
     return getObjectInArrayWithName(templateName);
 }
 
+/**
+ * 'object' needs to have a key with name 'children' that point to an array.
+ * This function will then return the child in the array with the 'name: name'.
+*/
+QJsonObject getArtboardChildWithName(const QString &name, const QJsonObject object)
+{
+    getArray("children", object);
+    return getObjectInArrayWithName(name);
+}
+
+QJsonObject getArtboardWithState(const QString &state, const QJsonObject object)
+{
+    getArray("artboards", object);
+    return getObjectInArrayWithName(QString("state=") + state);
+}
+
+/**
+ * Nodes with an image will store the path to that image inside the metadata
+ * Since this strucutre seems to be the same for all nodes, it's factored out
+ * to this function.
+*/
+QString getAssetPathInChild(const QJsonObject object)
+{
+    getObject("metadata", object);
+    getObject("assetData");
+    return getValue("assetPath").toString();
+}
+
 } // namespace
