@@ -139,7 +139,7 @@ void generateButton(const QJsonDocument &doc)
         [&buttonArtboardSet](const QString &state) {
             getArtboardWithState(state, buttonArtboardSet);
             getArtboardChildWithName("background");
-            return getAssetPathInChild();
+            return getImagePathInMetaData();
         });
 }
 
@@ -157,7 +157,7 @@ void generateCheckBox(const QJsonDocument &doc)
         [&backgroundArtboardSet](const QString &state) {
             getArtboardWithState(state, backgroundArtboardSet);
             getArtboardChildWithName("background");
-            return getAssetPathInChild();
+            return getImagePathInMetaData();
         });
 
     const auto indicatorArtboardSet = getArtboardSet("CheckboxIndicator", doc);
@@ -167,7 +167,7 @@ void generateCheckBox(const QJsonDocument &doc)
         [&indicatorArtboardSet](const QString &state) {
             getArtboardWithState(state, indicatorArtboardSet);
             getArtboardChildWithName("checkBackground");
-            return getAssetPathInChild();
+            return getImagePathInMetaData();
         });
 }
 

@@ -23,6 +23,6 @@ QJsonObject getArtboardSet(const QString &templateName, const QJsonDocument &doc
 QJsonObject getArtboardWithState(const QString &state, const QJsonObject object = lastObject);
 QJsonObject getArtboardChildWithName(const QString &name, const QJsonObject object = lastObject);
 QJsonObject getObjectInArrayWithName(const QString &name, const QJsonArray &array = lastArray);
-QString getAssetPathInChild(const QJsonObject object = lastObject);
+QString getImagePathInMetaData(const QJsonObject object = lastObject);
 
 } // namespace

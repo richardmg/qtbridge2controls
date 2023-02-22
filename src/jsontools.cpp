@@ -109,7 +109,7 @@ QJsonObject getArtboardChildWithName(const QString &name, const QJsonObject obje
  * to this function.
  * \sa https://www.qt.io/blog/qt-bridge-metadata-format
 */
-QString getAssetPathInChild(const QJsonObject object)
+QString getImagePathInMetaData(const QJsonObject object)
 {
     getObject("metadata", object);
     getObject("assetData");
