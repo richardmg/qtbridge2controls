@@ -141,13 +141,13 @@ void generateButton(const QJsonDocument &doc)
     debug();
     debug("generating Button");
     copyFileToStyleFolder(":/Button.qml");
+
+    const auto root = getTemplateRootObject("ButtonTemplate", doc);
     generateImages(
         "button-background",
         {"idle", "pressed", "checked", "hovered"},
-        [&doc](const QString &state) {
-            getArray("artboardSets", doc.object());
-            getObjectInArrayWithName("ButtonTemplate");
-            getArray("artboards");
+        [&root](const QString &state) {
+            getArray("artboards", root);
             getObjectInArrayWithName(QString("state=") + state);
             getArray("children");
             getObjectInArrayWithName("background");
