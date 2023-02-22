@@ -39,14 +39,17 @@ void setVerbose(bool verbose)
     verboseOptionSet = verbose;
 }
 
-void debug(const QString &msg = "")
+void debug(const QString &msg)
 {
     if (!verboseOptionSet)
         return;
-    if (msg.isEmpty())
-        qDebug().noquote() << "\n";
-    else
-        qDebug() << msg;
+    qDebug().noquote() << msg;
+}
+
+void debugHeader(const QString &msg)
+{
+    debug("");
+    debug("*** " + msg + " ***");
 }
 
 /**
@@ -128,8 +131,7 @@ void generateImages(
 
 void generateButton(const QJsonDocument &doc)
 {
-    debug();
-    debug("generating Button");
+    debugHeader("generating Button");
     copyFileToStyleFolder(":/Button.qml");
 
     const auto buttonArtboardSet = getArtboardSet("ButtonTemplate", doc);
@@ -145,8 +147,7 @@ void generateButton(const QJsonDocument &doc)
 
 void generateCheckBox(const QJsonDocument &doc)
 {
-    debug();
-    debug("generating CheckBox");
+    debugHeader("generating CheckBox");
 
     copyFileToStyleFolder(":/CheckBox.qml");
 
