@@ -75,18 +75,6 @@ void copyFileToStyleFolder(const QString srcPath, const QString destFileName = "
     srcFile.copy(targetPath);
 }
 
-/**
- * Get the json object that points to the root of the
- * tree that describes a control / template
-*/
-QJsonObject getTemplateRootObject(const QString &templateName, const QJsonDocument &doc)
-{
-    // TODO: When using real-life data, 'artboardSets' will probably not
-    // be on the root node, so this function will need to be adjusted!
-    getArray("artboardSets", doc.object());
-    return getObjectInArrayWithName(templateName);
-}
-
 void copyImageToStyleFolder(const QString &baseName, const QString state, const QString srcName)
 {
     // Require the images to be png for now. While we could convert svg's to
@@ -163,6 +151,22 @@ void generateCheckBox(const QJsonDocument &doc)
     debug("generating CheckBox");
 
     copyFileToStyleFolder(":/CheckBox.qml");
+
+    const auto root = getTemplateRootObject("CheckboxBackground", doc);
+    generateImages(
+        "button-background",
+        {"idle", "pressed", "checked", "hovered"},
+        [&root](const QString &state) {
+            getArray("artboards", root);
+            getObjectInArrayWithName(QString("state=") + state);
+            getArray("children");
+            getObjectInArrayWithName("background");
+            getObject("metadata");
+            getObject("assetData");
+            return getValue("assetPath").toString();
+        });
+
+
     // const QJsonObject checkBoxBackground = getTemplateRootObject("CheckboxBackground", doc);
     // const QJsonObject checkBoxIndicator = getTemplateRootObject("CheckboxIndicator", doc);
     // generateImages("checkbox-background", checkBoxBackground);

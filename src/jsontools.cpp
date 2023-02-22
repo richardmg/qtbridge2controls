@@ -70,4 +70,16 @@ QJsonValue getValue(const QString &key, const QJsonObject object)
     return lastValue;
 }
 
+/**
+ * Get the json object that points to the root of the
+ * tree that describes a control / template
+*/
+QJsonObject getTemplateRootObject(const QString &templateName, const QJsonDocument &doc)
+{
+    // TODO: When using real-life data, 'artboardSets' will probably not
+    // be on the root node, so this function will need to be adjusted!
+    getArray("artboardSets", doc.object());
+    return getObjectInArrayWithName(templateName);
+}
+
 } // namespace

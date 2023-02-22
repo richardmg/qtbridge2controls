@@ -18,4 +18,6 @@ QJsonObject getObject(const QString &key, const QJsonObject object = lastObject)
 QJsonArray getArray(const QString &key, const QJsonObject object = lastObject);
 QJsonValue getValue(const QString &key, const QJsonObject object = lastObject);
 
+QJsonObject getTemplateRootObject(const QString &templateName, const QJsonDocument &doc);
+
 } // namespace
