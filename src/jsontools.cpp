@@ -28,7 +28,7 @@ QJsonObject getObjectInArrayWithName(const QString &name, const QJsonArray &arra
         }
     }
 
-    throw std::runtime_error("could not find object in array: '" + name.toStdString() + "'");
+    throw std::runtime_error("could not find object in array '" + name.toStdString() + "'");
 }
 
 // Returns the object with the given key in the object. The
@@ -37,7 +37,7 @@ QJsonObject getObject(const QString &key, const QJsonObject object)
 {
     const auto foundValue = object.value(key);
     if (foundValue.isUndefined())
-        throw std::runtime_error("could not find object with key: '" + key.toStdString() + "'");
+        throw std::runtime_error("could not find object '" + key.toStdString() + "'");
     if (!foundValue.isObject())
         throw std::runtime_error("'" + key.toStdString() + "' is not an object!");
     
@@ -50,7 +50,7 @@ QJsonArray getArray(const QString &key, const QJsonObject object)
 {
     const auto foundValue = object.value(key);
     if (foundValue.isUndefined())
-        throw std::runtime_error("could not find array with key: '" + key.toStdString() + "'");
+        throw std::runtime_error("could not find array '" + key.toStdString() + "'");
     if (!foundValue.isArray())
         throw std::runtime_error("'" + key.toStdString() + "' is not an array!");
     
@@ -64,7 +64,7 @@ QJsonValue getValue(const QString &key, const QJsonObject object)
 {
     const auto foundValue = object.value(key);
     if (foundValue.isUndefined())
-        throw std::runtime_error("could not find value with key: '" + key.toStdString() + "'");
+        throw std::runtime_error("could not find value '" + key.toStdString() + "'");
     
     lastValue = foundValue;
     return lastValue;
