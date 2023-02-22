@@ -117,18 +117,36 @@ void generateQmlDir()
 template <typename SearchFunction>
 void generateImages(
     const QString &baseName,
+    const QStringList &imageStates,
+    const QStringList &jsonStates,
+    SearchFunction search)
+{
+    if (imageStates.count() != jsonStates.count())
+        throw std::runtime_error("imageStates and jsonStates have different count!");
+    for (int i = 0; i < imageStates.count(); ++i) {
+        const auto imageState = imageStates[i];
+        const auto jsonState = jsonStates[i];
+        debug("generating image for state " + imageState + " (" + jsonState + ")");
+        try {
+            const auto assetPath = search(jsonState);
+            copyImageToStyleFolder(baseName, imageState, assetPath);
+        } catch (std::exception &e) {
+            qWarning() << "Warning: could not generate image:" << baseName << "," << imageState << "reason:" << e.what();
+        }
+    }
+}
+
+template <typename SearchFunction>
+void generateImages(
+    const QString &baseName,
     const QStringList &states,
     SearchFunction search)
 {
-    for (const auto state : states) {
-        try {
-            debug("generating image for state " + state);
-            const auto assetPath = search(state);
-            copyImageToStyleFolder(baseName, state, assetPath);
-        } catch (std::exception &e) {
-            qWarning() << "Warning: could not generate image:" << baseName << "," << state << "reason:" << e.what();
-        }
-    }
+    // TODO: when the images in Figma has the same state name
+    // as the imagine style images, we no longer need to map between
+    // the states, and we can therefore collapse the following
+    // function into this one.
+    generateImages(baseName, states, states, search);
 }
 
 void generateButton(const QJsonDocument &doc)
@@ -181,20 +199,11 @@ void generateSwitch(const QJsonDocument &doc)
     const auto backgroundArtboardSet = getArtboardSet("SwitchBackground", doc);
     generateImages(
         "switch-background",
-        {"idle", "pressed", "checked", "hovered"},
+        {"idle", "pressed", "hovered"},
+        {"idleON", "pressedON", "hoveredON"},
         [&backgroundArtboardSet](const QString &state) {
             getArtboardWithState(state, backgroundArtboardSet);
             getArtboardChildWithName("background");
-            return getImagePathInMetaData();
-        });
-
-    const auto indicatorArtboardSet = getArtboardSet("CheckboxIndicator", doc);
-    generateImages(
-        "checkbox-indicator",
-        {"idle", "pressed", "checked", "hovered"},
-        [&indicatorArtboardSet](const QString &state) {
-            getArtboardWithState(state, indicatorArtboardSet);
-            getArtboardChildWithName("checkBackground");
             return getImagePathInMetaData();
         });
 }
