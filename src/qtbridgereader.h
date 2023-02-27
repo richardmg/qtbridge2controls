@@ -15,9 +15,6 @@ public:
         m_destDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation)
         + "/" + qApp->applicationName();
 
-        if (QFileInfo(bridgeFile).suffix().compare(u"qtbridge"_qs) != 0)
-            throw std::runtime_error("Input is not a .qtbridge file!");
-
         QZipReader zip(bridgeFile);
         if (!zip.isReadable())
             throw std::runtime_error("Could not read input file: " + bridgeFile.toStdString());
