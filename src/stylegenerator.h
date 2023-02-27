@@ -75,7 +75,8 @@ private:
         srcFile.copy(targetFilePath);
     }
 
-    void copyImageToStyleFolder(const QString resourceName, const QString &subName = "")
+    void copyImageToStyleFolder(const QString &name, const QString &state,
+        const QString resourceName)
     {
         // Require the images to be png for now. While we could convert svg's to
         // png's on the fly, we should rather investigate how we can do this during build
@@ -84,9 +85,8 @@ private:
             throw std::runtime_error("The image needs to be png: " + resourceName.toStdString());
 
         const QString srcPath = m_resourcePath + '/' + resourceName;
-        const QString targetState = (m_currentState == "idle") ? "" : "-" + m_currentState;
-        const QString targetSubName = (subName == "") ? "" : "-" + subName;
-        const QString targetName = "images/" + m_currentBaseName + targetSubName + targetState + ".png";
+        const QString targetState = (state == "idle") ? "" : "-" + state;
+        const QString targetName = "images/" + name + targetState + ".png";
         copyFileToStyleFolder(srcPath, targetName);
     }
 
@@ -113,7 +113,6 @@ private:
 
     template <typename SearchFunction>
     void generateImages(
-        const QString &baseName,
         const QStringList &imageStates,
         const QStringList &jsonStates,
         SearchFunction search)
@@ -121,42 +120,36 @@ private:
         if (imageStates.count() != jsonStates.count())
             throw std::runtime_error("imageStates list and jsonStates list have different count!");
 
-        m_currentBaseName = baseName;
+        QString name;
+        QString state;
         QString jsonState;
 
         for (int i = 0; i < imageStates.count(); ++i) {
-            m_currentState = imageStates[i];
+            state = imageStates[i];
             jsonState = jsonStates[i];
 
-            debug("generating image '" + baseName + "' for state '"
-                + m_currentState + "' ('" + jsonState + "')");
-
             try {
-                search(jsonState);
+                search(state, jsonState);
             } catch (std::exception &e) {
                 qWarning().nospace().noquote()
-                    << "Warning: could not generate image '"
-                    << baseName << ", " << m_currentState
-                    << "' (json: " << lastArtboardSetName << ", "
-                    << jsonState << ", " << lastArtboardChildName << "') "
-                    << "reason: " << e.what();
+                    << "Warning: could not generate image. Json path: "
+                    << lastArtboardSetName << ", "
+                    << jsonState << ", "
+                    << lastArtboardChildName << ". "
+                    << "Reason: " << e.what();
             }
         }
-
-        m_currentState = "";
-        m_currentBaseName = "";
     }
 
     template <typename SearchFunction>
     void generateImages(
-        const QString &baseName,
         const QStringList &states,
         SearchFunction search)
     {
         // TODO: when the Figma images have the same state names as the imagine
         // style images, we no longer need to do this mapping between the states, and
         // we can collapse the following function into this one.
-        generateImages(baseName, states, states, search);
+        generateImages(states, states, search);
     }
 
     void generateButton()
@@ -166,13 +159,13 @@ private:
 
         const auto buttonArtboardSet = getArtboardSet("ButtonTemplate", m_document);
         generateImages(
-            "button-background",
             {"idle", "pressed", "checked", "hovered"},
-            [&buttonArtboardSet, this](const QString &state)
+            [&buttonArtboardSet, this]
+            (const QString &state, const QString &jsonState)
             {
-                getArtboardWithState(state, buttonArtboardSet);
+                getArtboardWithState(jsonState, buttonArtboardSet);
                 getArtboardChildWithName("background");
-                copyImageToStyleFolder(getImagePathInMetaData());
+                copyImageToStyleFolder("button-background", state, getImagePathInMetaData());
             });
     }
 
@@ -183,24 +176,24 @@ private:
 
         const auto backgroundArtboardSet = getArtboardSet("CheckboxBackground", m_document);
         generateImages(
-            "checkbox-background",
             {"idle", "pressed", "checked", "hovered"},
-            [&backgroundArtboardSet, this](const QString &state)
+            [&backgroundArtboardSet, this]
+            (const QString &state, const QString &jsonState)
             {
-                getArtboardWithState(state, backgroundArtboardSet);
+                getArtboardWithState(jsonState, backgroundArtboardSet);
                 getArtboardChildWithName("background");
-                copyImageToStyleFolder(getImagePathInMetaData());
+                copyImageToStyleFolder("checkbox-background", state, getImagePathInMetaData());
             });
 
         const auto indicatorArtboardSet = getArtboardSet("CheckboxIndicator", m_document);
         generateImages(
-            "checkbox-indicator",
             {"idle", "pressed", "checked", "hovered"},
-            [&indicatorArtboardSet, this](const QString &state)
+            [&indicatorArtboardSet, this]
+            (const QString &state, const QString &jsonState)
             {
-                getArtboardWithState(state, indicatorArtboardSet);
+                getArtboardWithState(jsonState, indicatorArtboardSet);
                 getArtboardChildWithName("checkBackground");
-                copyImageToStyleFolder(getImagePathInMetaData());
+                copyImageToStyleFolder("checkbox-indicator", state, getImagePathInMetaData());
             });
     }
 
@@ -211,30 +204,30 @@ private:
 
         const auto backgroundArtboardSet = getArtboardSet("SwitchBackground", m_document);
         generateImages(
-            "switch-background",
             {"idle", "pressed", "hovered"},
             {"idleON", "pressedON", "hoveredON"},
-            [&backgroundArtboardSet, this](const QString &state)
+            [&backgroundArtboardSet, this]
+            (const QString &state, const QString &jsonState)
             {
-                getArtboardWithState(state, backgroundArtboardSet);
+                getArtboardWithState(jsonState, backgroundArtboardSet);
                 getArtboardChildWithName("background");
-                copyImageToStyleFolder(getImagePathInMetaData());
+                copyImageToStyleFolder("switch-background", state, getImagePathInMetaData());
             });
 
         const auto handleArtboardSet = getArtboardSet("SwitchHandle", m_document);
         generateImages(
-            "switch-handle",
             {"idle", "pressed", "hovered"},
             {"idleON", "pressedON", "hoveredON"},
-            [&handleArtboardSet, this](const QString &state)
+            [&handleArtboardSet, this]
+            (const QString &state, const QString &jsonState)
             {
-                const auto artboard = getArtboardWithState(state, handleArtboardSet);
+                const auto artboard = getArtboardWithState(jsonState, handleArtboardSet);
                 getArtboardChildWithName("handle", artboard);
-                copyImageToStyleFolder(getImagePathInMetaData());
+                copyImageToStyleFolder("switch-handle", state, getImagePathInMetaData());
                 getArtboardChildWithName("iconLeftON", artboard);
-                copyImageToStyleFolder(getImagePathInMetaData(), "iconleft-on");
+                copyImageToStyleFolder("switch-handle-lefticon-on", state, getImagePathInMetaData());
                 getArtboardChildWithName("iconRightON", artboard);
-                copyImageToStyleFolder(getImagePathInMetaData(), "iconright-on");
+                copyImageToStyleFolder("switch-handle-righticon-on", state, getImagePathInMetaData());
             });
     }
 
@@ -243,9 +236,6 @@ private:
     QString m_resourcePath;
     QString m_targetPath;
     bool m_verbose = false;
-
-    QString m_currentBaseName;
-    QString m_currentState;
 };
 
 #endif // QSTYLEREADER_H
