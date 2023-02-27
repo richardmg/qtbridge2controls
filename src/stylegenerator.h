@@ -122,10 +122,11 @@ private:
             throw std::runtime_error("imageStates list and jsonStates list have different count!");
 
         m_currentBaseName = baseName;
+        QString jsonState;
 
         for (int i = 0; i < imageStates.count(); ++i) {
             m_currentState = imageStates[i];
-            const QString jsonState = jsonStates[i];
+            jsonState = jsonStates[i];
 
             debug("generating image '" + baseName + "' for state '"
                 + m_currentState + "' ('" + jsonState + "')");
@@ -133,11 +134,12 @@ private:
             try {
                 search(jsonState);
             } catch (std::exception &e) {
-                qWarning() << "Warning: could not generate image:" << baseName
-                    << m_currentState
-                    << lastArtboardSetName
-                    << lastArtboardChildName
-                    << "reason:" << e.what();
+                qWarning().nospace().noquote()
+                    << "Warning: could not generate image '"
+                    << baseName << ", " << m_currentState
+                    << "' (json: " << lastArtboardSetName << ", "
+                    << jsonState << ", " << lastArtboardChildName << "') "
+                    << "reason: " << e.what();
             }
         }
 
