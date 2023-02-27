@@ -10,9 +10,15 @@ using namespace JsonTools;
 
 namespace StyleGenerator {
 
+static QJsonDocument document;
 static QString resourcePath;
 static QString styleDir;
 static bool verboseOptionSet = false;
+
+void setDocument(const QJsonDocument &doc)
+{
+    document = doc;
+}
 
 /**
  * Sets the patch to the resource directory inside
@@ -147,12 +153,12 @@ void generateImages(
     generateImages(baseName, states, states, search);
 }
 
-void generateButton(const QJsonDocument &doc)
+void generateButton()
 {
     debugHeader("generating Button");
     copyFileToStyleFolder(":/Button.qml");
 
-    const auto buttonArtboardSet = getArtboardSet("ButtonTemplate", doc);
+    const auto buttonArtboardSet = getArtboardSet("ButtonTemplate", document);
     generateImages(
         "button-background",
         {"idle", "pressed", "checked", "hovered"},
@@ -163,12 +169,12 @@ void generateButton(const QJsonDocument &doc)
         });
 }
 
-void generateCheckBox(const QJsonDocument &doc)
+void generateCheckBox()
 {
     debugHeader("generating CheckBox");
     copyFileToStyleFolder(":/CheckBox.qml");
 
-    const auto backgroundArtboardSet = getArtboardSet("CheckboxBackground", doc);
+    const auto backgroundArtboardSet = getArtboardSet("CheckboxBackground", document);
     generateImages(
         "checkbox-background",
         {"idle", "pressed", "checked", "hovered"},
@@ -178,7 +184,7 @@ void generateCheckBox(const QJsonDocument &doc)
             return getImagePathInMetaData();
         });
 
-    const auto indicatorArtboardSet = getArtboardSet("CheckboxIndicator", doc);
+    const auto indicatorArtboardSet = getArtboardSet("CheckboxIndicator", document);
     generateImages(
         "checkbox-indicator",
         {"idle", "pressed", "checked", "hovered"},
@@ -189,12 +195,12 @@ void generateCheckBox(const QJsonDocument &doc)
         });
 }
 
-void generateSwitch(const QJsonDocument &doc)
+void generateSwitch()
 {
     debugHeader("generating Switch");
     copyFileToStyleFolder(":/Switch.qml");
 
-    const auto backgroundArtboardSet = getArtboardSet("SwitchBackground", doc);
+    const auto backgroundArtboardSet = getArtboardSet("SwitchBackground", document);
     generateImages(
         "switch-background",
         {"idle", "pressed", "hovered"},
@@ -206,11 +212,11 @@ void generateSwitch(const QJsonDocument &doc)
         });
 }
 
-void generateStyle(const QJsonDocument &doc)
+void generateStyle()
 {
-    generateButton(doc);
-    generateCheckBox(doc);
-    generateSwitch(doc);
+    generateButton();
+    generateCheckBox();
+    generateSwitch();
     generateQmlDir();
 }
 

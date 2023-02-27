@@ -39,14 +39,11 @@ int main(int argc, char **argv){
     const QString dest = parser.value("d");
 
     try {
-
         const QtBridgeReader bridgeReader(src);
-        const QJsonDocument doc = bridgeReader.metaData();
-
+        setDocument(bridgeReader.metaData());
         setResourcePath(bridgeReader.unzippedPath());
         setTargetPath(dest);
-        generateStyle(doc);
-
+        generateStyle();
     } catch (std::exception &e) {
         qWarning() << "Error:" << e.what();
         return -1;
