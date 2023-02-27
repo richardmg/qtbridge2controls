@@ -38,8 +38,8 @@ public:
             throw std::runtime_error("Could not open file for reading: " + metaDataFileName.toStdString());
 
         QJsonParseError error;
-        m_metaData = QJsonDocument::fromJson(metaDataFile.readAll(), &error);
-        if (m_metaData.isNull())
+        m_document = QJsonDocument::fromJson(metaDataFile.readAll(), &error);
+        if (m_document.isNull())
             throw std::runtime_error("Could not parse json file: " + error.errorString().toStdString());
     }
 
@@ -48,12 +48,12 @@ public:
         QDir(m_destDir).removeRecursively();
     }
 
-    QJsonDocument metaData() const
+    QJsonDocument document() const
     {
-        return m_metaData;
+        return m_document;
     }
 
-    QString unzippedPath() const
+    QString resourcePath() const
     {
         return m_destDir;
     }
@@ -65,7 +65,7 @@ public:
 
 private: 
     QString m_destDir;
-    QJsonDocument m_metaData;
+    QJsonDocument m_document;
 };
 
 #endif

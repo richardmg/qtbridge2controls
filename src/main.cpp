@@ -30,12 +30,12 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    const QString src = parser.positionalArguments().first();
-    const QString dest = parser.value("d");
+    const QString sourcePath = parser.positionalArguments().first();
+    const QString destinationPath = parser.value("d");
 
     try {
-        QtBridgeReader bridgeReader(src);
-        StyleGenerator generator(bridgeReader.metaData(), bridgeReader.unzippedPath(), dest);
+        QtBridgeReader bridgeReader(sourcePath);
+        StyleGenerator generator(bridgeReader.document(), bridgeReader.resourcePath(), destinationPath);
         generator.setVerbose(parser.isSet("verbose"));
         generator.generateStyle();
     } catch (std::exception &e) {
