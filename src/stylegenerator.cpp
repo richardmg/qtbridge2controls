@@ -207,6 +207,7 @@ void generateSwitch(const QJsonDocument &doc)
             return getImagePathInMetaData();
         });
 }
+
 void generateStyle(const QJsonDocument &doc)
 {
     generateButton(doc);
