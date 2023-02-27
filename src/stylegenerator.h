@@ -4,10 +4,10 @@
 namespace StyleGenerator
 {
 
-void setDocument(const QJsonDocument &doc);
-void setResourcePath(const QString &path);
-void setTargetPath(const QString path);
-void setVerbose(bool verbose);
+extern QJsonDocument document;
+extern QString resourcePath;
+extern QString targetPath;
+extern bool verbose;
 
 void generateStyle();
 

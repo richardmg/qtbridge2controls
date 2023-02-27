@@ -10,42 +10,14 @@ using namespace JsonTools;
 
 namespace StyleGenerator {
 
-static QJsonDocument document;
-static QString resourcePath;
-static QString styleDir;
-static bool verboseOptionSet = false;
-
-void setDocument(const QJsonDocument &doc)
-{
-    document = doc;
-}
-
-/**
- * Sets the patch to the resource directory inside
- * the unzipped qtbridge folder.
- */
-void setResourcePath(const QString &path)
-{
-    resourcePath = path;
-}
-
-/**
- * Sets the path to the target style folder
- * that should be created.
-*/
-void setTargetPath(const QString path)
-{
-    styleDir = path;
-}
-
-void setVerbose(bool verbose)
-{
-    verboseOptionSet = verbose;
-}
+QJsonDocument document;
+QString resourcePath;
+QString targetPath;
+bool verbose = false;
 
 void debug(const QString &msg)
 {
-    if (!verboseOptionSet)
+    if (!verbose)
         return;
     qDebug().noquote() << msg;
 }
@@ -66,20 +38,20 @@ void copyFileToStyleFolder(const QString srcPath, const QString destFileName = "
     if (!srcFile.exists())
         throw std::runtime_error("File doesn't exist: " + srcPath.toStdString());
 
-    QString targetName = destFileName;
-    if (targetName.isEmpty())
-        targetName = QFileInfo(srcFile).fileName();
+    QString fileName = destFileName;
+    if (fileName.isEmpty())
+        fileName = QFileInfo(srcFile).fileName();
 
-    const QString targetPath = styleDir + "/" + targetName;
-    QFileInfo targetPathInfo(targetPath);
-    const QDir targetDir = targetPathInfo.absoluteDir();
+    const QString targetFilePath = targetPath + "/" + fileName;
+    QFileInfo targetFilePathInfo(targetFilePath);
+    const QDir targetDir = targetFilePathInfo.absoluteDir();
     if (!targetDir.exists()) {
         if (!QDir().mkpath(targetDir.path()))
             throw std::runtime_error("Could not create target path: " + targetPath.toStdString());
     }
 
-    debug("copying " + srcPath + " to " + targetPath);
-    srcFile.copy(targetPath);
+    debug("copying " + srcPath + " to " + targetFilePath);
+    srcFile.copy(targetFilePath);
 }
 
 void copyImageToStyleFolder(const QString &baseName, const QString state, const QString srcName)
@@ -99,8 +71,8 @@ void copyImageToStyleFolder(const QString &baseName, const QString state, const 
 
 void generateQmlDir()
 {
-    const QString path = styleDir + "/qmldir";
-    const QString styleName = QFileInfo(styleDir).fileName();
+    const QString path = targetPath + "/qmldir";
+    const QString styleName = QFileInfo(targetPath).fileName();
     debug("generating qmldir: " + path);
 
     const QString version(" 1.0 ");

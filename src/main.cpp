@@ -4,8 +4,6 @@
 #include "qtbridgereader.h"
 #include "stylegenerator.h"
 
-using namespace StyleGenerator;
-
 int main(int argc, char **argv){
     QGuiApplication app(argc, argv);
 
@@ -28,7 +26,7 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    setVerbose(parser.isSet("verbose"));
+    StyleGenerator::verbose = parser.isSet("verbose");
 
     if (parser.positionalArguments().length() != 1) {
         parser.showHelp();
@@ -40,10 +38,10 @@ int main(int argc, char **argv){
 
     try {
         const QtBridgeReader bridgeReader(src);
-        setDocument(bridgeReader.metaData());
-        setResourcePath(bridgeReader.unzippedPath());
-        setTargetPath(dest);
-        generateStyle();
+        StyleGenerator::document = bridgeReader.metaData();
+        StyleGenerator::resourcePath = bridgeReader.unzippedPath();
+        StyleGenerator::targetPath = dest;
+        StyleGenerator::generateStyle();
     } catch (std::exception &e) {
         qWarning() << "Error:" << e.what();
         return -1;
