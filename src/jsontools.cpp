@@ -7,6 +7,9 @@ QJsonObject lastObject;
 QJsonArray lastArray;
 QJsonValue lastValue;
 
+QString lastArtboardSetName;
+QString lastArtboardChildName;
+
 // Returns the object with the given name in the array. The
 // object needs to have a "name" key, as such.
 QJsonObject getObjectInArrayWithName(const QString &name, const QJsonArray &array)
@@ -74,12 +77,13 @@ QJsonValue getValue(const QString &key, const QJsonObject object)
  * Get the json object that points to the root of the
  * tree that describes a control (quick) / template (figma) / artboard (qtbridge)
 */
-QJsonObject getArtboardSet(const QString &artboardName, const QJsonDocument &doc)
+QJsonObject getArtboardSet(const QString &artboardSetName, const QJsonDocument &doc)
 {
     // TODO: When using real-life data, 'artboardSets' will probably not
     // be on the root node, so this function will need to be adjusted!
+    lastArtboardSetName = artboardSetName;
     getArray("artboardSets", doc.object());
-    return getObjectInArrayWithName(artboardName);
+    return getObjectInArrayWithName(artboardSetName);
 }
 
 /**
@@ -99,6 +103,7 @@ QJsonObject getArtboardWithState(const QString &state, const QJsonObject object)
 */
 QJsonObject getArtboardChildWithName(const QString &name, const QJsonObject object)
 {
+    lastArtboardChildName = name;
     getArray("children", object);
     return getObjectInArrayWithName(name);
 }

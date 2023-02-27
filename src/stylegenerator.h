@@ -134,7 +134,10 @@ private:
                 search(jsonState);
             } catch (std::exception &e) {
                 qWarning() << "Warning: could not generate image:" << baseName
-                    << ", state:" << m_currentState << "reason:" << e.what();
+                    << m_currentState
+                    << lastArtboardSetName
+                    << lastArtboardChildName
+                    << "reason:" << e.what();
             }
         }
 
@@ -226,10 +229,10 @@ private:
                 const auto artboard = getArtboardWithState(state, handleArtboardSet);
                 getArtboardChildWithName("handle", artboard);
                 copyImageToStyleFolder(getImagePathInMetaData());
-                // getArtboardChildWithName("iconLeftON", artboard);
-                // copyImageToStyleFolder(getImagePathInMetaData(), "iconLeftOn");
-                // getArtboardChildWithName("iconRightON", artboard);
-                // copyImageToStyleFolder(getImagePathInMetaData(), "iconRightOn");
+                getArtboardChildWithName("iconLeftON", artboard);
+                copyImageToStyleFolder(getImagePathInMetaData(), "iconLeftOn");
+                getArtboardChildWithName("iconRightON", artboard);
+                copyImageToStyleFolder(getImagePathInMetaData(), "iconRightOn");
             });
     }
 
