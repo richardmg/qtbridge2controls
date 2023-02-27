@@ -119,19 +119,17 @@ private:
         SearchFunction search)
     {
         if (imageStates.count() != jsonStates.count())
-            throw std::runtime_error("imageStates and jsonStates have different count!");
+            throw std::runtime_error("imageStates list and jsonStates list have different count!");
+
         for (int i = 0; i < imageStates.count(); ++i)
         {
             const auto imageState = imageStates[i];
             const auto jsonState = jsonStates[i];
             debug("generating image '" + baseName + "' for state '" + imageState + "' ('" + jsonState + "')");
-            try
-            {
+            try {
                 const auto assetPath = search(jsonState);
                 copyImageToStyleFolder(baseName, imageState, assetPath);
-            }
-            catch (std::exception &e)
-            {
+            } catch (std::exception &e) {
                 qWarning() << "Warning: could not generate image:" << baseName << ", state:" << imageState << "reason:" << e.what();
             }
         }
