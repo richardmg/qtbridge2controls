@@ -124,7 +124,7 @@ private:
         {
             const auto imageState = imageStates[i];
             const auto jsonState = jsonStates[i];
-            debug("generating image for state " + imageState + " (" + jsonState + ")");
+            debug("generating image '" + baseName + "' for state '" + imageState + "' ('" + jsonState + "')");
             try
             {
                 const auto assetPath = search(jsonState);
@@ -132,7 +132,7 @@ private:
             }
             catch (std::exception &e)
             {
-                qWarning() << "Warning: could not generate image:" << baseName << "," << imageState << "reason:" << e.what();
+                qWarning() << "Warning: could not generate image:" << baseName << ", state:" << imageState << "reason:" << e.what();
             }
         }
     }
@@ -209,6 +209,18 @@ private:
             {
                 getArtboardWithState(state, backgroundArtboardSet);
                 getArtboardChildWithName("background");
+                return getImagePathInMetaData();
+            });
+
+        const auto handleArtboardSet = getArtboardSet("SwitchHandle", m_document);
+        generateImages(
+            "switch-handle",
+            {"idle", "pressed", "hovered"},
+            {"idleON", "pressedON", "hoveredON"},
+            [&handleArtboardSet](const QString &state)
+            {
+                getArtboardWithState(state, handleArtboardSet);
+                getArtboardChildWithName("handle");
                 return getImagePathInMetaData();
             });
     }
