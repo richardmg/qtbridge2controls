@@ -14,8 +14,6 @@ static QString resourcePath;
 static QString styleDir;
 static bool verboseOptionSet = false;
 
-typedef QString (*JsonSearchFunction)(const QString &state, const QJsonObject &root);
-
 /**
  * Sets the patch to the resource directory inside
  * the unzipped qtbridge folder.
