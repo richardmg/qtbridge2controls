@@ -232,9 +232,9 @@ private:
                 getArtboardChildWithName("handle", artboard);
                 copyImageToStyleFolder(getImagePathInMetaData());
                 getArtboardChildWithName("iconLeftON", artboard);
-                copyImageToStyleFolder(getImagePathInMetaData(), "iconLeftOn");
+                copyImageToStyleFolder(getImagePathInMetaData(), "iconleft-on");
                 getArtboardChildWithName("iconRightON", artboard);
-                copyImageToStyleFolder(getImagePathInMetaData(), "iconRightOn");
+                copyImageToStyleFolder(getImagePathInMetaData(), "iconright-on");
             });
     }
 
