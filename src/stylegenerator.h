@@ -75,18 +75,18 @@ private:
         srcFile.copy(targetFilePath);
     }
 
-    void copyImageToStyleFolder(const QString srcName)
+    void copyImageToStyleFolder(const QString resourceName, const QString &subName = "")
     {
         // Require the images to be png for now. While we could convert svg's to
         // png's on the fly, we should rather investigate how we can do this during build
         // time (with the work done to create png icons from svg from cmake).
-        if (!srcName.endsWith(".png"))
-            throw std::runtime_error("The image needs to be png: " + srcName.toStdString());
+        if (!resourceName.endsWith(".png"))
+            throw std::runtime_error("The image needs to be png: " + resourceName.toStdString());
 
-        // Special case: the 'idle' state should not be included in the file name
+        const QString srcPath = m_resourcePath + '/' + resourceName;
         const QString targetState = (m_currentState == "idle") ? "" : "-" + m_currentState;
-        const QString srcPath = m_resourcePath + '/' + srcName;
-        const QString targetName = "images/" + m_currentBaseName + targetState + ".png";
+        const QString targetSubName = (subName == "") ? "" : "-" + subName;
+        const QString targetName = "images/" + m_currentBaseName + targetSubName + targetState + ".png";
         copyFileToStyleFolder(srcPath, targetName);
     }
 
@@ -137,6 +137,9 @@ private:
                     << ", state:" << m_currentState << "reason:" << e.what();
             }
         }
+
+        m_currentState = "";
+        m_currentBaseName = "";
     }
 
     template <typename SearchFunction>
@@ -220,9 +223,13 @@ private:
             {"idleON", "pressedON", "hoveredON"},
             [&handleArtboardSet, this](const QString &state)
             {
-                getArtboardWithState(state, handleArtboardSet);
-                getArtboardChildWithName("handle");
+                const auto artboard = getArtboardWithState(state, handleArtboardSet);
+                getArtboardChildWithName("handle", artboard);
                 copyImageToStyleFolder(getImagePathInMetaData());
+                // getArtboardChildWithName("iconLeftON", artboard);
+                // copyImageToStyleFolder(getImagePathInMetaData(), "iconLeftOn");
+                // getArtboardChildWithName("iconRightON", artboard);
+                // copyImageToStyleFolder(getImagePathInMetaData(), "iconRightOn");
             });
     }
 
