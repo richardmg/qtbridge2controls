@@ -1,6 +1,5 @@
 #include <QtGui>
 
-#include "jsontools.h"
 #include "qtbridgereader.h"
 #include "stylegenerator.h"
 
@@ -26,8 +25,6 @@ int main(int argc, char **argv){
         return -1;
     }
 
-    StyleGenerator::verbose = parser.isSet("verbose");
-
     if (parser.positionalArguments().length() != 1) {
         parser.showHelp();
         return -1;
@@ -37,11 +34,10 @@ int main(int argc, char **argv){
     const QString dest = parser.value("d");
 
     try {
-        const QtBridgeReader bridgeReader(src);
-        StyleGenerator::document = bridgeReader.metaData();
-        StyleGenerator::resourcePath = bridgeReader.unzippedPath();
-        StyleGenerator::targetPath = dest;
-        StyleGenerator::generateStyle();
+        QtBridgeReader bridgeReader(src);
+        StyleGenerator generator(bridgeReader.metaData(), bridgeReader.unzippedPath(), dest);
+        generator.setVerbose(parser.isSet("verbose"));
+        generator.generateStyle();
     } catch (std::exception &e) {
         qWarning() << "Error:" << e.what();
         return -1;

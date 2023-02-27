@@ -11,7 +11,7 @@ qt_add_executable(qtbridge2controls
     src/main.cpp
     src/qtbridgereader.h
     src/jsontools.h src/jsontools.cpp
-    src/stylegenerator.h src/stylegenerator.cpp
+    src/stylegenerator.h
 )
 
 qt_add_resources(qtbridge2controls "controls"
