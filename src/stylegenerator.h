@@ -121,8 +121,7 @@ private:
         if (imageStates.count() != jsonStates.count())
             throw std::runtime_error("imageStates list and jsonStates list have different count!");
 
-        for (int i = 0; i < imageStates.count(); ++i)
-        {
+        for (int i = 0; i < imageStates.count(); ++i) {
             const auto imageState = imageStates[i];
             const auto jsonState = jsonStates[i];
             debug("generating image '" + baseName + "' for state '" + imageState + "' ('" + jsonState + "')");
@@ -141,10 +140,9 @@ private:
         const QStringList &states,
         SearchFunction search)
     {
-        // TODO: when the images in Figma has the same state name
-        // as the imagine style images, we no longer need to map between
-        // the states, and we can therefore collapse the following
-        // function into this one.
+        // TODO: when the Figma images have the same state names as the imagine
+        // style images, we no longer need to do this mapping between the states, and
+        // we can collapse the following function into this one.
         generateImages(baseName, states, states, search);
     }
 
